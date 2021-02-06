@@ -14,12 +14,21 @@ def index():
         render_template("HTML_end.html")
 
 @app.route('/projects')
-def pjrojects():
+def project():
     return render_template('/pages/projects.html')
+
+@app.route('/teaching/<pagename>')
+def project_pages(pagename=None):
+    return render_template('/pages/projects/'+pagename+'.html')
 
 @app.route('/teaching')
 def teaching():
     return render_template('/pages/teaching.html')
+
+@app.route('/teaching/<pagename>')
+def teaching_pages(pagename=None):
+    return render_template('/pages/teaching/'+pagename+'.html')
+
 
 @app.route('/CV')
 def CV():

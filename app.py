@@ -11,7 +11,7 @@ def log_visitor():
     dt = now.strftime("%d/%m/%Y %H:%M:%S")
 
     f = open("log.txt", "a")
-    f.write(dt + ": " + str(visitor_ip))
+    f.write(dt + ": " + str(visitor_ip) + "\n")
     f.close()
 
 @app.route('/')

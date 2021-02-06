@@ -8,7 +8,7 @@ import cv2
 
 app = Flask(__name__)
 
-heightmap_model = None
+global heightmap_model = None
 
 def log_visitor():
     visitor_ip = request.remote_addr
@@ -88,8 +88,8 @@ def teaching_pages(pagename=None):
 
 @app.route('/get_heightmap')
 def get_generated_image():
-    if(heightmap_model is None):
-        heightmap_model = load_latest_model()
+    if(global heightmap_model is None):
+        global heightmap_model = GAN_heightmaps.load_latest_model()
     
     generated_img = GAN_heightmaps.generate_heightmap(heightmap_model)
     success, return_img = cv2.imencode(".png", generated_img)

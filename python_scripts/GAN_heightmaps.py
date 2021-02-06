@@ -55,7 +55,7 @@ def image_noise(n, im_size, device="cpu"):
 
 def get_img_from_tensor(t, nrow=1):
     t = torch.clamp(t,0.0,1.0)
-    imgs = t.detach().cpu().numpy().swapaxes(0,1).swapaxes(1,2)
+    imgs = t[0].detach().cpu().numpy().swapaxes(0,1).swapaxes(1,2)
     imgs *= 255 
     imgs = imgs.astype(np.uint8)
     return imgs
@@ -92,6 +92,6 @@ def generate_heightmap():
 
     img = feed_forward(model, noise, img_noises)
     print(img.shape)
-    
+
     return img
     

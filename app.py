@@ -5,6 +5,8 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
+    a = render_template('index.html')
+    print(a)
     return render_template('index.html')
 
 @app.route('/projects')
@@ -17,8 +19,8 @@ def teaching():
 
 @app.route('/CV')
 def CV():
-    return render_template('documents/CVJan2020.pdf')
-    
+    return render_template('/documents/CVJan2020.pdf')
+
 if __name__ == '__main__':
     #app.run(host='127.0.0.1',debug=True,port="12345")
     app.run(host='0.0.0.0',debug=False,port="80")

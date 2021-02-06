@@ -23,7 +23,7 @@ def teaching():
 
 @app.route('/CV')
 def CV():
-    return render_template('/documents/CVJan2020.pdf')
+    return url_for('/documents/CVJan2020.pdf')
 
 if __name__ == '__main__':
     #app.run(host='127.0.0.1',debug=True,port="12345")

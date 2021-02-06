@@ -15,19 +15,44 @@ def index():
 
 @app.route('/projects')
 def project():
-    return render_template('/pages/projects.html')
+    return render_template('HTML_start.html') + \
+        render_template('HTML_head.html') + \
+        render_template('HTML_bodystart.html') + \
+        render_template('HTML_sidebar.html') + \
+        render_template('/pages/projects_body.html') + \
+        render_template('HTML_bodyend.html') + \
+        render_template("HTML_end.html")
 
 @app.route('/teaching/<pagename>')
 def project_pages(pagename=None):
-    return render_template('/pages/projects/'+pagename+'.html')
+    return render_template('HTML_start.html') + \
+        render_template('HTML_head.html') + \
+        render_template('HTML_bodystart.html') + \
+        render_template('HTML_sidebar.html') + \
+        render_template('/pages/projects/'+pagename+'.html') + \
+        render_template('HTML_bodyend.html') + \
+        render_template("HTML_end.html")
 
 @app.route('/teaching')
 def teaching():
-    return render_template('/pages/teaching.html')
+    return render_template('HTML_start.html') + \
+        render_template('HTML_head.html') + \
+        render_template('HTML_bodystart.html') + \
+        render_template('HTML_sidebar.html') + \
+        render_template('pages/teaching_body.html') + \
+        render_template('HTML_bodyend.html') + \
+        render_template("HTML_end.html")
 
 @app.route('/teaching/<pagename>')
 def teaching_pages(pagename=None):
-    return render_template('/pages/teaching/'+pagename+'.html')
+    return render_template('HTML_start.html') + \
+        render_template('HTML_head.html') + \
+        render_template('HTML_bodystart.html') + \
+        render_template('HTML_sidebar.html') + \
+        render_template('/pages/teaching/'+pagename+'.html') + \
+        render_template('HTML_bodyend.html') + \
+        render_template("HTML_end.html")
+        
 
 
 @app.route('/CV')

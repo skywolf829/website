@@ -6,10 +6,13 @@ from stylegan2_pytorch import ModelLoader, Trainer
 import imageio
 
 def load_latest_model():
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    models_dir = os.path.join(base_dir, "saved_models")
+    results_dir = os.path.join(base_dir, "results")
     model_args = dict(
         name = 'GAN_heightmaps',
-        results_dir = './results',
-        models_dir = '/home/pi/website/python_scripts/saved_models/GAN_heightmaps',
+        results_dir = results_dir,
+        models_dir = models_dir,
         batch_size = 1,
         gradient_accumulate_every = 6,
         image_size = 128,
@@ -42,11 +45,11 @@ def load_latest_model():
     )
     print("Loading model")
     model = Trainer(**model_args)
-    model.load(-1)
+    model.load(30)
     model.GAN.train(False)
     
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    model.to(device)
+    model.GAN = model.GAN.to(device)
     return model
 
 def exists(val):

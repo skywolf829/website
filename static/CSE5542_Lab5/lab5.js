@@ -1104,7 +1104,7 @@ function initScene() {
     kb.translate = [0, 0, 0];
     scene_graph.children.push(kb);
     kb.root = scene_graph;
-    init_texture(kb, "/~wurster.18/pages/projects/CSE5542_Lab5/brick.jpg");
+    init_texture(kb, "/static/CSE5542_Lab5/brick.jpg");
     kb.ambient = [0.1, 0.1, 0.1];
   
     var skybox = create_cube(1, [1, 0, 0]);
@@ -1113,7 +1113,7 @@ function initScene() {
     skybox.translate = [0, 0, 0];
     scene_graph.children.push(skybox);
     skybox.root = scene_graph;
-    init_texture(skybox, "/~wurster.18/pages/projects/CSE5542_Lab5/skybox.jpg");
+    init_texture(skybox, "/static/CSE5542_Lab5/skybox.jpg");
     skybox.ambient = [1.0, 1.0, 1.0];
 
     var reflectSkybox = create_sphere(30, 30, [1, 1, 1]);
@@ -1123,8 +1123,8 @@ function initScene() {
     reflectSkybox.localScale = [15, 15, 15];
     reflectSkybox.ambient = [0.8, 0.8, 0.8];
     reflectSkybox.textureScale = [1, 1];
-    init_cubeMap(reflectSkybox, "/~wurster.18/pages/projects/CSE5542_Lab5/skybox");
-    init_normalMap(reflectSkybox, "/~wurster.18/pages/projects/CSE5542_Lab5/coolNormal2.jpg");
+    init_cubeMap(reflectSkybox, "/static/CSE5542_Lab5/skybox");
+    init_normalMap(reflectSkybox, "/static/CSE5542_Lab5/coolNormal2.jpg");
 
     var globe = create_sphere(50, 50, [1, 1, 1]);
     globe.name = "globe";
@@ -1133,7 +1133,7 @@ function initScene() {
     globe.localScale = [.35, .35, .35];
     globe.translate = [-3, 0, 0];
     globe.ambient = [0.8, 0.8, 0.8];
-    init_texture(globe, "/~wurster.18/pages/projects/CSE5542_Lab5/4096_earth.jpg");
+    init_texture(globe, "/static/CSE5542_Lab5/4096_earth.jpg");
 
     var moon = create_sphere(50, 50, [1, 1, 1]);
     moon.name = "moon";
@@ -1142,9 +1142,10 @@ function initScene() {
     moon.localScale = [.5, .5, .5];
     moon.translate = [1.75, 0, 0];
     moon.ambient = [0.8, 0.8, 0.8];
-    init_texture(moon, "/~wurster.18/pages/projects/CSE5542_Lab5/8k_moon.jpg");
+    init_texture(moon, "/static/CSE5542_Lab5/8k_moon.jpg");
 
-    loadOBJfile("/~wurster.18/pages/projects/CSE5542_Lab5/rock.obj", [35, -10, 0], [0, 0, 0], [3, 3, 3], [1, 1, 1], null, "/~wurster.18/pages/projects/CSE5542_Lab5/skybox", "/~wurster.18/pages/projects/CSE5542_Lab5/coolNormal.jpg");
+    loadOBJfile("/static/CSE5542_Lab5/rock.obj", [35, -10, 0], [0, 0, 0], [3, 3, 3], [1, 1, 1], null, 
+    "/static/CSE5542_Lab5/skybox", "/static/CSE5542_Lab5/coolNormal.jpg");
     //loadOBJfile("./TheCity.obj", [0, -50, 200], [0, 0, 0], [0.1, 0.1, 0.1], [.2, .4, 0.8]);
     
     // Create the three axes for reference
@@ -1177,8 +1178,8 @@ function initScene() {
     goodBrick.root = scene_graph;
     goodBrick.textureScale = [5, 5];
     
-    init_texture(goodBrick, "/~wurster.18/pages/projects/CSE5542_Lab5/goodBrick.jpg");
-    init_normalMap(goodBrick, "/~wurster.18/pages/projects/CSE5542_Lab5/goodBrickNormal.jpg");
+    init_texture(goodBrick, "/static/CSE5542_Lab5/goodBrick.jpg");
+    init_normalMap(goodBrick, "/static/CSE5542_Lab5/goodBrickNormal.jpg");
 
     var goodBrick2 = create_cube(1, [1, 1, 1]);
     goodBrick2.name = "goodBrick2";
@@ -1187,7 +1188,7 @@ function initScene() {
     scene_graph.children.push(goodBrick2);
     goodBrick2.root = scene_graph;
     goodBrick2.textureScale = [5, 5];    
-    init_normalMap(goodBrick2, "/~wurster.18/pages/projects/CSE5542_Lab5/coolNormal.jpg");
+    init_normalMap(goodBrick2, "/static/CSE5542_Lab5/coolNormal.jpg");
 
  
 
@@ -1199,8 +1200,8 @@ function initScene() {
     base.localScale = [20, 7, 7];
     base.rotation = [0, 0, 0];
     base.translate = [-20, -46, 43];
-    init_texture(base, "/~wurster.18/pages/projects/CSE5542_Lab5/weirdRock.jpg");
-    init_normalMap(base, "/~wurster.18/pages/projects/CSE5542_Lab5/weirdRockNormal.jpg");
+    init_texture(base, "/static/CSE5542_Lab5/weirdRock.jpg");
+    init_normalMap(base, "/static/CSE5542_Lab5/weirdRockNormal.jpg");
 
     chest = create_cube(1, [1, .8, 0]);
     chest.name = "Chest";
@@ -1208,8 +1209,8 @@ function initScene() {
     chest.root = base;
     chest.localScale = [8 * (1/chest.root.global_scale()[0]), 20 * (1/chest.root.global_scale()[1]), 5 * (1/chest.root.global_scale()[2])];
     chest.translate = [0*(1/chest.root.global_scale()[0]), 10*(1/chest.root.global_scale()[1]), 0* (1/chest.root.global_scale()[2])];
-    init_texture(chest, "/~wurster.18/pages/projects/CSE5542_Lab5/metal.jpg");
-    init_normalMap(chest, "/~wurster.18/pages/projects/CSE5542_Lab5/metalNormalMap.jpg");
+    init_texture(chest, "/static/CSE5542_Lab5/metal.jpg");
+    init_normalMap(chest, "/static/CSE5542_Lab5/metalNormalMap.jpg");
 
     head = create_sphere(20, 20, [.7, .1, .8]);
     head.name = "Head";

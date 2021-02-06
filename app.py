@@ -1,10 +1,22 @@
 
 from flask import Flask, render_template, Response, jsonify, request, json
+import os
+from datetime import datetime
 
 app = Flask(__name__)
 
+def log_visitor():
+    visitor_ip = request.remote_addr
+    now = datetime.now()
+    dt = now.strftime("%d/%m/%Y %H:%M:%S")
+
+    f = open("log.txt", "a")
+    f.write(dt + ": " + str(visitor_ip))
+    f.close()
+
 @app.route('/')
 def index():
+    log_visitor()
     return '<!DOCTYPE html><html lang="en">' + \
             "<head>" + \
             render_template('head_items.html') + \
@@ -15,6 +27,7 @@ def index():
 
 @app.route('/projects')
 def project():
+    log_visitor()
     return '<!DOCTYPE html><html lang="en">' + \
             "<head>" + \
             render_template('head_items.html') + \
@@ -25,6 +38,7 @@ def project():
 
 @app.route('/projects/<pagename>')
 def project_pages(pagename=None):
+    log_visitor()
     if(pagename == "CSE5542_finalproject.html"):        
         return '<!DOCTYPE html><html lang="en">' + \
             "<head>" + \
@@ -46,6 +60,7 @@ def project_pages(pagename=None):
 
 @app.route('/teaching')
 def teaching():
+    log_visitor()
     return '<!DOCTYPE html><html lang="en">' + \
             "<head>" + \
             render_template('head_items.html') + \
@@ -56,6 +71,7 @@ def teaching():
 
 @app.route('/teaching/<pagename>')
 def teaching_pages(pagename=None):
+    log_visitor()
     return '<!DOCTYPE html><html lang="en">' + \
             "<head>" + \
             render_template('head_items') + \

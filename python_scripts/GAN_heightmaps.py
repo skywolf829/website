@@ -40,6 +40,7 @@ def load_latest_model():
         mixed_prob = 0.9,
         log = False
     )
+    print("Loading model")
     model = Trainer(**model_args)
     model.load(-1)
     model.GAN.train(False)
@@ -83,9 +84,8 @@ def feed_forward(model, noise, img_noises):
     images = images[:,0:1,:,:]
     return get_img_from_tensor(images, nrow=1)
 
-def generate_heightmap():
-    print("Loading model")
-    model = load_latest_model()
+def generate_heightmap(model):
+    #model = load_latest_model()
 
     noise = torch.randn(1, 512)
     img_noises = image_noise(1, 128)

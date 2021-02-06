@@ -81,13 +81,17 @@ def teaching_pages(pagename=None):
             render_template('/pages/teaching/'+pagename) + \
            "</body></html>" 
 
+heightmap_model = None
 @app.route('/get_heightmap')
 def get_generated_image():
     import python_scripts.GAN_heightmaps as GAN_heightmaps
     import base64
     import cv2
 
-    generated_img = GAN_heightmaps.generate_heightmap()
+    if(heightmap_model is None):
+        heightmap_model = load_latest_model()
+    
+    generated_img = GAN_heightmaps.generate_heightmap(heightmap_model)
     success, return_img = cv2.imencode(".png", generated_img)
     return_img = return_img.tobytes()
     return jsonify({"img":str(base64.b64encode(return_img))})

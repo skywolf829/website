@@ -8,7 +8,7 @@ import cv2
 
 app = Flask(__name__)
 
-global heightmap_model = None
+global heightmap_model
 
 def log_visitor():
     visitor_ip = request.remote_addr

@@ -7,11 +7,12 @@ app = Flask(__name__)
 
 def log_visitor():
     visitor_ip = request.remote_addr
+    visitor_requested_path = request.full_path
     now = datetime.now()
     dt = now.strftime("%d/%m/%Y %H:%M:%S")
 
     f = open("log.txt", "a")
-    f.write(dt + ": " + str(visitor_ip) + "\n")
+    f.write(dt + ": " + str(visitor_ip) + " " + str(visitor_requested_path) + "\n")
     f.close()
 
 @app.route('/')

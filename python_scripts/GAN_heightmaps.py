@@ -79,6 +79,7 @@ def styles_to_images(model, w, noise):
 def feed_forward(model, noise, img_noises):
     styles  = noise_to_styles(model, noise, trunc_psi = None)
     images  = styles_to_images(model, styles, img_noises) 
+    print(images.shape)
     images = images[:,0:1,:,:]
     return get_img_from_tensor(images, nrow=1)
 
@@ -89,5 +90,8 @@ def generate_heightmap():
     noise = torch.randn(1, 512)
     img_noises = image_noise(1, 128)
 
-    return feed_forward(model, noise, img_noises)
+    img = feed_forward(model, noise, img_noises)
+    print(img.shape)
+    
+    return img
     

@@ -1,0 +1,38 @@
+<header>
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/AeQfgJc6YhE" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</header>
+<script>
+  function request_heightmap(){
+    $.ajax({
+      url: "/get_heightmap",
+      type: "get",
+      success: function(response){
+        var python_bytes = response['img']
+        python_bytes = python_bytes.substring(2, python_bytes.length-1)
+        document.getElementById('heightmap').src = "data:img/png;base64,"+python_bytes;        
+      }
+    });
+  }
+</script>
+
+<!-- Page Content -->
+<section class="py-5">
+  <div class="container">
+    <h1 class="font-weight-light">GAN generated heightmaps</h1>
+    <p class="lead">A StyleGAN2 trained to generate heightmaps from North America</p>
+
+    <p>As part of a class project for my Procedural Content Generation class in Fall 2020, I developed a system 
+      for realtime heightmap generation within a game engine. My tool has these components:</p>
+      <ol>
+        <li>1. A trained StyleGAN2 that has learned to synthesis realistic looking heightmaps based on North American heightmaps.
+          Each heightmap is 128x128 pixels, and represents roughly 1536 arcseconds, or roughly 50km in each direction.
+        </li>
+        <li>2. A python server to serve endpoints to interact with the trained model</li>
+        <li>3. A set of unity scripts to (a) allow the user to specify "rules" about what their heightmap should look like, (b) issue requests to the server, and (c) update a heightmap in realtime.</li>
+      </ol>
+      <p>With this tool, designers can query a GAN to find a desired heightmap. This can reduce the time it takes to get a working copy of a heightmap to prototype levels and game mechanics.</p>
+      <p>Clicking the button below will query the same trained GAN to generate a realistic looking heightmap. 
+        The code for this project can be found at <a href='https://github.com/skywolf829/ProceduralContentGeneration-FinalProject'>here</a>.</p>
+      <img id='heightmap' scr="/static/example_heightmap.png">  
+    </div>
+</section>

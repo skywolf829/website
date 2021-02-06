@@ -3,6 +3,7 @@ import numpy as np
 import sys
 import os
 from stylegan2_pytorch import ModelLoader, Trainer
+import imageio
 
 def load_latest_model():
     model_args = dict(

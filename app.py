@@ -8,11 +8,11 @@ def index():
     return render_template('index.html')
 
 @app.route('/projects')
-def index():
+def pjrojects():
     return render_template('/pages/projects.html')
 
 @app.route('/teaching')
-def index():
+def teaching():
     return render_template('/pages/teaching.html')
 
 if __name__ == '__main__':

@@ -3,7 +3,6 @@ import numpy as np
 import sys
 import os
 from stylegan2_pytorch import ModelLoader, Trainer
-model = None
 
 def load_latest_model():
     model_args = dict(
@@ -84,9 +83,8 @@ def feed_forward(model, noise, img_noises):
     return get_img_from_tensor(images, nrow=1)
 
 def generate_heightmap():
-    if(model is None):
-        print("Loading model")
-        model = load_latest_model()
+    print("Loading model")
+    model = load_latest_model()
 
     noise = torch.randn(1, 512)
     img_noises = image_noise(1, 128)

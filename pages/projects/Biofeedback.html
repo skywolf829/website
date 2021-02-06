@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Skylar Wurster - Biofeedback</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="/~wurster.18/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom fonts for this template -->
+  <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet">
+  <link href="/~wurster.18/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="/~wurster.18/css/resume.css" rel="stylesheet">
+  <link href="/~wurster.18/css/heroic-features.css" rel="stylesheet">
+  <link href="/~wurster.18/css/blog-post.css" rel="stylesheet">
+  <link href="/~wurster.18/css/video.css" rel="stylesheet">
+  <link href="/~wurster.18/css/project_page.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+    <a class="navbar-brand js-scroll-trigger" href="#page-top">
+      <span class="d-block d-lg-none">Skylar Wurster</span>
+      <span class="d-none d-lg-block">
+        <img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="/~wurster.18/img/profile.jpg" alt="">
+      </span>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link js-scroll-trigger" href="/~wurster.18/index.html">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link js-scroll-trigger" href="/~wurster.18/pages/teaching.html">Teaching: CSE 2221 Software 1</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link js-scroll-trigger" href="/~wurster.18/pages/projects.html">Projects</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link js-scroll-trigger" href="/~wurster.18/documents/Wurster_CV.pdf">CV</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+<header>
+  <iframe height="100%" width="100%"  src="https://www.youtube.com/embed/UdnMqbdrNkQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</header>
+
+<!-- Page Content -->
+<section class="py-5">
+  <div class="container">
+    <h1 class="font-weight-light">BioFeedback</h1>
+    <p class="lead">Controling electronics with signals from the body</p>
+
+    <p>Starting in the summer of 2017, I began exploring biofeedback through various sensors. Through my job at ACCAD, I was able to work with Arduino and an IR sensor used on a fingertip to measure the light value. From this, numbers representing a heartbeat value emerged, and we were able to use this metric for feedback into a system.</p>
+
+<p>Another system we purchased was the Emotiv Insight, a five sensor EEG scanner that measured 5 brainwaves. The SDK was much more challenging to work with, however. The code for the heartbeat was done in Processing, and I wanted to combine the two into one sandbox. The solution was to use Processing for Eclipse, allowing me to properly import the SDK library, and code in the Eclipse IDE. However, this caused build problems for cross platform (and even cross machine), so we currently don't have this working on a machine other than my laptop.</p>
+
+​
+
+<p>Above is an example of the setup. First, Arduino code is compiled to send data via serial to the computer. My Processing script, which used to be a visualizer, then sends that data via OSC to Isadora. Isadora does some number crunching with a javascript file I wrote, and then is sent to light sources via an Entec box. In the end, we get a cool effect of my heartbeat through the lights.</p>
+
+  </div>
+</section>
+
+<!-- Bootstrap core JavaScript -->
+<script src="/~wurster.18/vendor/jquery/jquery.min.js"></script>
+<script src="/~wurster.18/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

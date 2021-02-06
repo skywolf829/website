@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Skylar Wurster - Project 3 Tips</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="/~wurster.18/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom fonts for this template -->
+  <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet">
+  <link href="/~wurster.18/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="/~wurster.18/css/resume.css" rel="stylesheet">
+  <link href="/~wurster.18/css/heroic-features.css" rel="stylesheet">
+  <link href="/~wurster.18/css/blog-post.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+    <a class="navbar-brand js-scroll-trigger" href="#page-top">
+      <span class="d-block d-lg-none">Skylar Wurster</span>
+      <span class="d-none d-lg-block">
+        <img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="/~wurster.18/img/profile.jpg" alt="">
+      </span>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link js-scroll-trigger" href="/~wurster.18/index.html">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link js-scroll-trigger" href="/~wurster.18/pages/teaching.html">Teaching: CSE 2221 Software 1</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link js-scroll-trigger" href="/~wurster.18/pagesprojects.html">Projects</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link js-scroll-trigger" href="/~wurster.18/documents/Wurster_CV.pdf">CV</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <div class="container">
+
+    <div class="row">
+
+      <!-- Post Content Column -->
+      <div class="col-lg-8">
+
+        <!-- Title -->
+        <h1 class="mt-4">Project 3 tips</h1>
+
+        <hr>
+
+        <!-- Preview Image -->
+        
+
+        <hr>
+
+        <!-- Post Content -->
+        <!--p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus, vero, obcaecati, aut, error quam sapiente nemo saepe quibusdam sit excepturi nam quia corporis eligendi eos magni recusandae laborum minus inventore?</p!-->
+        <p class="lead"><a href="http://web.cse.ohio-state.edu/software/2221/web-sw1/assignments/projects/pseudoscience.html">Project 3: Pseudoscience</a></p>
+        <p>This lab is mainly to get you used to using arrays and while/for loops. You'll be using 5 user input numbers: w, x, y, z, and u. w, x, y, and z are all used to estimate u so that u = w^a * x^b * y^c * z^d, within some error, as close as possible. You'll type in w, x, y, z, and u, but will need to use arrays and loops to calculate a, b, c, and d to minimize the error between u and w^a * x^b * y^c * z^d.</p>
+        <p>Note that getPositiveDouble DOESN'T INCLUDE 0. Their input must be greater than 0.</p>
+        <p>For getting user input, consider the following code snippet.</p>
+        <code>
+          ...
+          SimpleReader in = new SimpleReader1L();
+          SimpleWriter out = new SimpleWriter1L();
+          out.print("Enter an integer: ");
+          String userInput = in.nextLine();
+          int x;
+          if(FormatChecker.canParseInt(userInput)){
+              x = Integer.parseInt(userInput);
+          }
+          else{
+              out.println("That wasn't an integer! Failed to update x.");
+          }
+          ...
+        </code>
+        <p>This code asks the user for an integer as input. We use SimpleReader in to read a line (which returns a string, not an int!). Then we use FormatChecker to see if that string is actually an integer. Finally, since we know its an integer, we save it to x using Integer.parseInt(userInput). You'll have to do something similar to this for getPositiveDouble and getPositiveDoubleNotOne, except add a few things:
+        <ol>
+        <li>Use doubles instead of ints. This is a simple switch using FormatChecker.canParseDouble() and Double.parseDouble()</li>
+        <li>You'll have to repeatedly as for user input until a valid input is given. If they enter "a;lsdjfbiu", we can't take that. You should print something like "That wasn't a double.", and continue to ask for a double as input. You'll need some sort of loop and a way of knowing if they've input a proper double yet.</li>
+        </ol>
+        </p>
+        <p>In class I mentioned not to check for equality of doubles using == like in this example:</p>        
+        <code>
+            ...
+            double x = 1.5;
+            double y = 1.5;
+            //Multiply by 10 10 times, so in the end x = x * 100;
+            for(int i = 0; i < 10; i++){
+                x = x * 10.0;
+            }
+            //Divide by 100 to return x to its original value, which should be 1.5
+            x = x / 100.0;
+            
+            out.println(x == y);    //prints false, but logically should be true!
+            out.println(x);         //prints 1.5E8
+            out.println(y);         //prints 1.5
+            
+            ...
+        </code>
+        <p>As you can see, doubles lose the precision we expect in normal math, so we have to be very careful with checking doubles with ==. But, in the function getPositiveDoubleNotOne(), it is okay to check for == 1. Its just important to know that this is a limitation in general.
+        </p>
+        <p>
+        A big issue I see in this project is not initializing your guess correctly. Heres an example similar. Suppose I have a hidden number, and I want to check what element of an array has the closest value. One solution could look like this:
+        </p>
+        <code>
+            
+            int[] arrayOfNumbers = { 76, 2, 3, 9, 34, 65, 16, 88 };
+            int numberToFindClosestTo = -5;
+            
+            int bestGuess = 0;
+            for(int i = 0; i < arrayOfNumbers.length; i++){
+                if(Math.abs(arrayOfNumbers[i] - numberToFindClosestTo) <
+                    Math.abs(bestGuess - numberToFindClosestTo)){
+                    bestGuess = arrayOfNumbers[i];
+                }
+            }
+            
+            return bestGuess;
+        </code>
+        <p>Do you see the issue with the code above? We want to find the number in arrayOfNumbers that's closest to -5. The answer should be 2, but the program will return 0. That's because we INITIALIZED bestGuess to 0, and 0 is a closer guess than anything in the array. But 0 isn't a possible answer since it's not in the array! Take a look at this better example.</p>
+        <code>
+            
+            int[] arrayOfNumbers = { 76, 2, 3, 9, 34, 65, 16, 88 };
+            int numberToFindClosestTo = -5;
+            
+            int bestGuess = arrayOfNumbers[0];
+            for(int i = 0; i < arrayOfNumbers.length; i++){
+                if(Math.abs(arrayOfNumbers[i] - numberToFindClosestTo) <
+                    Math.abs(bestGuess - numberToFindClosestTo)){
+                    bestGuess = arrayOfNumbers[i];
+                }
+            }
+            
+            return bestGuess;
+        </code>
+        <p>By initializing the bestGuess to the first spot in the array, we guarantee that the answer has to at least be a part of the array. You should find that in Pseudoscience, theres an extremely similar situation in which your approximation for u might not exist if you initialize your guess to 0. Instead initialize it to something that's actually possible for w^a * x^b * y^c * z^d where a, b, c, and d are all within that set of exponents from -15 to 15.</p>
+        <p>Some other general tips are:
+        <ul>
+        <li>Watch out for integer division. 1/2 = 0 in integer division. Try 1.0/2, or 1/2.0, or 1.0/2.0 for 0.5.</li>
+        <li>Practice good variable names. Counter variables are okay to be named i, j, k, but l should be avoided (same with o) because l looks like 1, L, I, and other letters depending on the font. o looks like O or 0 or O.</li>
+        </ul>
+        </p>
+        <hr>
+
+        
+
+      </div>
+
+    </div>
+    <!-- /.row -->
+
+  </div>
+  <!-- /.container -->
+
+  <!-- Footer -->
+  <footer class="py-5 bg-dark">
+    <div class="container">
+      <!--p class="m-0 text-center text-white">Copyright &copy; Your Website 2019</p!-->
+    </div>
+    <!-- /.container -->
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/~wurster.18/vendor/jquery/jquery.min.js"></script>
+  <script src="/~wurster.18/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

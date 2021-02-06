@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Skylar Wurster - Project 6 Tips</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="/~wurster.18/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom fonts for this template -->
+  <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet">
+  <link href="/~wurster.18/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="/~wurster.18/css/resume.css" rel="stylesheet">
+  <link href="/~wurster.18/css/heroic-features.css" rel="stylesheet">
+  <link href="/~wurster.18/css/blog-post.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+    <a class="navbar-brand js-scroll-trigger" href="#page-top">
+      <span class="d-block d-lg-none">Skylar Wurster</span>
+      <span class="d-none d-lg-block">
+        <img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="/~wurster.18/img/profile.jpg" alt="">
+      </span>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link js-scroll-trigger" href="/~wurster.18/index.html">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link js-scroll-trigger" href="/~wurster.18/pages/teaching.html">Teaching: CSE 2221 Software 1</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link js-scroll-trigger" href="/~wurster.18/pagesprojects.html">Projects</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link js-scroll-trigger" href="/~wurster.18/documents/Wurster_CV.pdf">CV</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <div class="container">
+
+    <div class="row">
+
+      <!-- Post Content Column -->
+      <div class="col-lg-8">
+
+        <!-- Title -->
+        <h1 class="mt-4">Project 6 tips</h1>
+
+        <hr>
+
+        <!-- Preview Image -->
+        
+
+        <hr>
+
+        <!-- Post Content -->
+        <p class="lead"><a href="http://web.cse.ohio-state.edu/software/2221/web-sw1/assignments/projects/natural-number-root/natural-number-root.html">Project 6: NaturalNumber Root</a></p>
+        <p>In this lab, you'll be taking the kth root of a NaturalNumber using the interval halving technique we taught in a 
+		<a href="http://web.cse.ohio-state.edu/software/2221/web-sw1/assignments/homeworks/interval-halving.html">homework</a> and a 
+		<a href="http://web.cse.ohio-state.edu/software/2221/web-sw1/extras/instructions/integer-root/integer-root.html">lab</a>. Hopefully,
+		any questions you had were brought up and answered by the instructor or graders. If not, be sure to ask about this quickly so you have
+		time to comprehend and code the solution with NaturalNumbers!</p>
+	    <p>We've done this exact problem with ints, but now we've gone and made it all difficult for you by making you use NaturalNumbers.
+		This is on purpose, obviously! NaturalNumbers are difficult to use, but they teach a few things in your struggles.</p>
+		<p>Firstly, they teach you how references work and make you remember that the variable's object value is copied when the parameter is
+		passed, but instead that the reference (memory location) value is copied. This is something you'll deal with in most languages.</p>
+		<p>Second, its good practice for using a specific piece of software given to you for use. Though I don't have precise examples 
+		off the top of my head (can you really blame me? I've only had a summer of experience with a large company), this is something you
+		may encounter on the job in the real world. It might be nice and easy to use ints, but the software your company has (aka OSU components)
+		may be more powerful/used company wide. In this case, NaturalNumber doesn't have a limit for the number it stores, so we can do the 
+		root finding on numbers higher than ints can go.</p>
+
+		<br>
+		<p>Here is a solution for the integer root using interval halving. As stated in the homework and lab linked above, 
+		we use lowEnough and tooHigh to create our "guess domain", where the answer can still reside in between [1,n+1).
+		Every time, we'll take a guess right in the middle with (tooHigh+lowEnough)/2. Then, we check if guess^r is
+		larger than our original number, n. If its larger, that means (equivalently) that guess > rth root of n,
+		so we know our guess is tooHigh. Otherwise, we know it was either too low, or equal to the answer, so we update
+		lowEnough. We continue this until the difference tooHigh-lowEnough is 1, because that means there is only one element
+		it can be - lowEnough! That is because our range is inclusive on the low end, and exclusive on the high end: [lowEnough, tooHigh).
+		That's also why we name them like we do, because tooHigh is literally, too high, but lowEnough <i>could</i> be the answer.</p>
+
+        <code>
+            
+           /**
+     		* Returns the {@code r}-th root of {@code n}.
+     		* 
+     		* @param n
+     		*            the number to which we want to apply the root
+    			 * @param r
+    			 *            the root
+     		* @return the root of the number
+     		* @requires n >= 0 and r > 0
+     		* @ensures root ^ (r) <= n < (root + 1) ^ (r)
+     		*/
+    		private static int root(int n, int r) {
+
+        		int lowEnough = 1;
+			int tooHigh = n+1;
+			while(tooHigh-lowEnough>1){
+				int guess = (tooHigh+lowEnough)/2
+				if(power(guess,r)>n){
+					tooHigh = guess;
+				}
+				else{
+					lowEnough = guess;
+				}
+			}
+			return lowEnough;
+
+    		}
+        </code>
+    
+		<p>Now your job is to convert this into NaturalNumber instead of ints. You can use any methods except for the instance method for root (recall the difference between an instance method and a static method? An instance 
+		method has a distinguished formal parameter, and methods are called like n.methodName(param1, param2), whereas static methods are called without that first "n.", and instead are just methodName(param1, param2)). As a hint, you'll probably only need methods
+		that correspond to operations you see in the solution above, like incrementing, subtraction, adding, dividing, comparing (compareTo), instantiating, and copying values.</p>
+	
+        <hr>
+
+        
+
+      </div>
+
+    </div>
+    <!-- /.row -->
+
+  </div>
+  <!-- /.container -->
+
+  <!-- Footer -->
+  <footer class="py-5 bg-dark">
+    <div class="container">
+      <!--p class="m-0 text-center text-white">Copyright &copy; Your Website 2019</p!-->
+    </div>
+    <!-- /.container -->
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/~wurster.18/vendor/jquery/jquery.min.js"></script>
+  <script src="/~wurster.18/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

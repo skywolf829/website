@@ -1,0 +1,35 @@
+<canvas id="lab5-canvas" width="500" height="500" style="border:none;"></canvas>
+<br>
+<div>
+<ul id="heirarchy"></ul>
+<br>
+<form>
+<p>Position</p>
+X:<input type="text" name="xPos" id="xPos" onChange="transformGO()"> Y:<input type="text" onChange="transformGO()" name="yPos" id="yPos"> Z:<input type="text" onChange="transformGO()"  name="zPos" id="zPos">   
+<p>Rotation</p>
+X:<input type="text" name="xRot" id="xRot" onChange="transformGO()"> Y:<input type="text" onChange="transformGO()" name="yRot" id="yRot"> Z:<input type="text" onChange="transformGO()" name="zRot" id="zRot">
+<p>Scale</p>
+X:<input type="text" name="xScale" id="xScale" onChange="transformGO()"> Y:<input type="text" onChange="transformGO()" name="yScale" id="yScale"> Z:<input type="text" onChange="transformGO()" name="zScale" id="zScale">
+<p>Texture offset</p>
+X:<input type="text" name="texOffsetX" id="texOffsetX" onChange="transformGO()"> Y:<input type="text" name="texOffsetY" id="texOffsetY" onChange="transformGO()">
+<p>Texture scale</p>
+X:<input type="text" name="texScaleX" id="texScaleX" onChange="transformGO()"> Y:<input type="text" name="texScaleY" id="texScaleY" onChange="transformGO()">
+</form>
+<button id="renderPoints" width ="50" height="20" onClick="renderPoints()">Render points</button>
+<button id="renderLines" width ="50" height="20" onClick="renderLines()">Render lines</button>
+<button id="renderTriangles" width ="50" height="20" onClick="renderTriangles()">Render triangles</button>
+<br>
+<button id="toggleLighting" width ="50" height="20" onClick="toggleLighting()">Toggle lighting</button>
+<button id="toggleTexture" width ="50" height="20" onClick="toggleTexture()">Toggle texture</button>
+<button id="toggleNormalMap" width ="50" height="20" onClick="toggleNormalMap()">Toggle normal map</button>
+<button id="toggleCubemap" width ="50" height="20" onClick="toggleCubemap()">Toggle cubemap</button>
+</div>
+<br>
+<b><u>Instructions:</u></b>
+<br>
+Use mouse to look around. 
+<br>Press left control to turn off mouse looking
+<br>Press WSAD for forward, backward, left, right
+<br>Press EQ for up, down
+<br>Select any gameObject in the scene by clicking it in the heirarchy. You may adjust any values for position, rotation, scale, texture offset, or texture scale. 
+<br>You can also render just points, lines, or triangles by clicking the buttons, or toggle lighting, textures, normal maps, or cubemaps.

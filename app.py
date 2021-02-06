@@ -52,12 +52,6 @@ def teaching_pages(pagename=None):
         render_template('/pages/teaching/'+pagename+'.html') + \
         render_template('HTML_bodyend.html') + \
         render_template("HTML_end.html")
-        
-
-
-@app.route('/CV')
-def CV():
-    return url_for('/documents/CVJan2020.pdf')
 
 if __name__ == '__main__':
     #app.run(host='127.0.0.1',debug=True,port="12345")

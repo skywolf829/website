@@ -6,10 +6,10 @@ from stylegan2_pytorch import ModelLoader, Trainer
 
 def load_latest_model():
     model_args = dict(
-        name = 'default',
+        name = 'GAN_heightmaps',
         results_dir = './results',
-        models_dir = './saved_models/GAN_heightmaps',
-        batch_size = 8,
+        models_dir = '/home/pi/website/python_scripts/saved_models/GAN_heightmaps',
+        batch_size = 1,
         gradient_accumulate_every = 6,
         image_size = 128,
         network_capacity = 4,
@@ -79,7 +79,6 @@ def styles_to_images(model, w, noise):
 def feed_forward(model, noise, img_noises):
     styles  = noise_to_styles(model, noise, trunc_psi = None)
     images  = styles_to_images(model, styles, img_noises) 
-    print(images.shape)
     images = images[:,0:1,:,:]
     return get_img_from_tensor(images, nrow=1)
 
@@ -91,7 +90,7 @@ def generate_heightmap():
     img_noises = image_noise(1, 128)
 
     img = feed_forward(model, noise, img_noises)
-    print(img.shape)
-
+    imageio.imwrite("heightmap.png", img)
+    
     return img
     

@@ -23,7 +23,7 @@ def project():
         render_template('HTML_bodyend.html') + \
         render_template("HTML_end.html")
 
-@app.route('/teaching/<pagename>')
+@app.route('/projects/<pagename>')
 def project_pages(pagename=None):
     if(pagename == "CSE5542_finalproject.html"):
         return render_template('/pages/projects/CSE5542_finalproject.html')
@@ -32,7 +32,7 @@ def project_pages(pagename=None):
             render_template('HTML_head.html') + \
             render_template('HTML_bodystart.html') + \
             render_template('HTML_sidebar.html') + \
-            render_template('/pages/projects/'+pagename+'.html') + \
+            render_template('/pages/projects/'+pagename) + \
             render_template('HTML_bodyend.html') + \
             render_template("HTML_end.html")
 
@@ -52,7 +52,7 @@ def teaching_pages(pagename=None):
         render_template('HTML_head.html') + \
         render_template('HTML_bodystart.html') + \
         render_template('HTML_sidebar.html') + \
-        render_template('/pages/teaching/'+pagename+'.html') + \
+        render_template('/pages/teaching/'+pagename) + \
         render_template('HTML_bodyend.html') + \
         render_template("HTML_end.html")
 

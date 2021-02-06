@@ -5,9 +5,13 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    a = render_template('index.html')
-    print(a)
-    return render_template('index.html')
+    return render_template('HTML_start.html') + \
+        render_template('HTML_head.html') + \
+        render_template('HTML_bodystart.html') + \
+        render_template('HTML_sidebar.html') + \
+        render_template('index_body.html') + \
+        render_template('HTML_bodyend.html') + \
+        render_template("HTML_end.html")
 
 @app.route('/projects')
 def pjrojects():

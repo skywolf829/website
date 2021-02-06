@@ -29,7 +29,7 @@ def project_pages(pagename=None):
         return '<!DOCTYPE html><html lang="en">' + \
             "<head>" + \
             render_template('head_items.html') + \
-            render_template('/pages/projects/CSE5542_finalproject_head.html') + \ 
+            render_template('/pages/projects/CSE5542_finalproject_head.html') + \
             "</head><body id='lab5-body' onload='webGLStart();'>" + \
             render_template('sidebar.html') + \
             render_template('/pages/projects/CSE5542_finalproject_body.html') + \

@@ -2,8 +2,13 @@ from flask import Flask, render_template, Response, jsonify, request, json
 import os
 from datetime import datetime
 import sys
+import python_scripts.GAN_heightmaps as GAN_heightmaps
+import base64
+import cv2
 
 app = Flask(__name__)
+
+heightmap_model = None
 
 def log_visitor():
     visitor_ip = request.remote_addr
@@ -81,13 +86,8 @@ def teaching_pages(pagename=None):
             render_template('/pages/teaching/'+pagename) + \
            "</body></html>" 
 
-heightmap_model = None
 @app.route('/get_heightmap')
 def get_generated_image():
-    import python_scripts.GAN_heightmaps as GAN_heightmaps
-    import base64
-    import cv2
-
     if(heightmap_model is None):
         heightmap_model = load_latest_model()
     

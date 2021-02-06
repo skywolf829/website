@@ -44,6 +44,9 @@ def load_latest_model():
     model = Trainer(**model_args)
     model.load(-1)
     model.GAN.train(False)
+    
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    model.to(device)
     return model
 
 def exists(val):
@@ -86,9 +89,9 @@ def feed_forward(model, noise, img_noises):
 
 def generate_heightmap(model):
     #model = load_latest_model()
-
-    noise = torch.randn(1, 512)
-    img_noises = image_noise(1, 128)
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    noise = torch.randn(1, 512).to(device)
+    img_noises = image_noise(1, 128).to(device)
 
     img = feed_forward(model, noise, img_noises)
     imageio.imwrite("heightmap.png", img)

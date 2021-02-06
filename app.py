@@ -25,13 +25,16 @@ def project():
 
 @app.route('/teaching/<pagename>')
 def project_pages(pagename=None):
-    return render_template('HTML_start.html') + \
-        render_template('HTML_head.html') + \
-        render_template('HTML_bodystart.html') + \
-        render_template('HTML_sidebar.html') + \
-        render_template('/pages/projects/'+pagename+'.html') + \
-        render_template('HTML_bodyend.html') + \
-        render_template("HTML_end.html")
+    if(pagename == "CSE5542_finalproject.html"):
+        return render_template('/pages/projects/CSE5542_finalproject.html')
+    else:
+        return render_template('HTML_start.html') + \
+            render_template('HTML_head.html') + \
+            render_template('HTML_bodystart.html') + \
+            render_template('HTML_sidebar.html') + \
+            render_template('/pages/projects/'+pagename+'.html') + \
+            render_template('HTML_bodyend.html') + \
+            render_template("HTML_end.html")
 
 @app.route('/teaching')
 def teaching():

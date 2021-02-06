@@ -75,7 +75,7 @@ def teaching_pages(pagename=None):
     log_visitor()
     return '<!DOCTYPE html><html lang="en">' + \
             "<head>" + \
-            render_template('head_items') + \
+            render_template('head_items.html') + \
             "</head><body>" + \
             render_template('sidebar.html') + \
             render_template('/pages/teaching/'+pagename) + \

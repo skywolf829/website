@@ -3,7 +3,6 @@ import numpy as np
 import sys
 import os
 from stylegan2_pytorch import ModelLoader, Trainer
-from torchvision.utils import make_grid
 model = None
 
 def load_latest_model():
@@ -57,7 +56,7 @@ def image_noise(n, im_size, device="cpu"):
 
 def get_img_from_tensor(t, nrow=1):
     t = torch.clamp(t,0.0,1.0)
-    imgs = make_grid(t, nrow=nrow).detach().cpu().numpy().swapaxes(0,1).swapaxes(1,2)
+    imgs = t.detach().cpu().numpy().swapaxes(0,1).swapaxes(1,2)
     imgs *= 255 
     imgs = imgs.astype(np.uint8)
     return imgs

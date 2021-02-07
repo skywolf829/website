@@ -45,21 +45,19 @@ class StyleGAN2(nn.Module):
 
     def forward(self, noise, img_noise):
         
-        traced_model = torch.jit.trace(self.S, noise)
-        traced_model.save("jit_model_S.pt")
+        #traced_model = torch.jit.trace(self.S, noise)
+        #traced_model.save("jit_model_S.pt")
 
         w = self.S(noise)
         w_def = [(w, 6)]
         w_tensors = torch.cat([t[:, None, :].expand(-1, n, -1) for t, n in w_def], dim=1)
        
-        traced_model = torch.jit.trace(self.G, (w_tensors, img_noise))
-        traced_model.save("jit_model_G.pt")
+        #traced_model = torch.jit.trace(self.G, (w_tensors, img_noise))
+        #traced_model.save("jit_model_G.pt")
 
         image = self.G(w_tensors, img_noise)
         image.clamp_(0., 1.)
 
-        #traced_GAN_G = torch.jit.trace(model.GAN.G, [w_tensors, noise])
-        #traced_GAN_G.save("GAN.G.jit.pt")
         return image
 
 class Generator(nn.Module):

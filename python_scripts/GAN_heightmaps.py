@@ -11,10 +11,14 @@ def load_model():
     models_dir = os.path.join(base_dir, "saved_models")
 
     model = StyleGAN2()
-    model.train(False)
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model = model.to(device)
-    model.load_from_normal(os.path.join(models_dir, "GAN_heightmaps"))
+    
+    state_dict = torch.load(os.path.join(models_dir, "GAN_heightmaps", "model.pt"))
+    model.load_state_dict(state_dict)
+    model = model.to(device)
+    model.train(False)
+    
     return model
 
 def image_noise(n, im_size, device="cpu"):

@@ -37,24 +37,11 @@ class StyleGAN2(nn.Module):
         self.G = Generator(image_size, latent_dim, network_capacity, transparent = transparent, 
         attn_layers = attn_layers, no_const = no_const, fmap_max = fmap_max)
     
-    def load_from_normal(self,ckpt_file):
-        S_state_dict = torch.load(os.path.join(ckpt_file, "S.pt"))
-        G_state_dict = torch.load(os.path.join(ckpt_file, "G.pt"))
-        self.S.load_state_dict(S_state_dict)
-        self.G.load_state_dict(G_state_dict)
-
     def forward(self, noise, img_noise):
-        
-        #traced_model = torch.jit.trace(self.S, noise)
-        #traced_model.save("jit_model_S.pt")
-
         w = self.S(noise)
         w_def = [(w, 6)]
         w_tensors = torch.cat([t[:, None, :].expand(-1, n, -1) for t, n in w_def], dim=1)
        
-        #traced_model = torch.jit.trace(self.G, (w_tensors, img_noise))
-        #traced_model.save("jit_model_G.pt")
-
         image = self.G(w_tensors, img_noise)
         image.clamp_(0., 1.)
 

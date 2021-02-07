@@ -91,7 +91,7 @@ def teaching_pages(pagename=None):
 def get_generated_image():
     global heightmap_model
     if heightmap_model is None:
-        heightmap_model = GAN_heightmaps.load_latest_model()
+        heightmap_model = GAN_heightmaps.load_model()
     
     generated_img = GAN_heightmaps.generate_heightmap(heightmap_model)
     success, return_img = cv2.imencode(".png", generated_img)

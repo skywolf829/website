@@ -102,7 +102,11 @@ def get_generated_image():
 
 @app.route('/img_to_hierarchy')
 def img_to_hierarchy():
+    
+    pth = os.path.dirname(os.path.abspath(__file__))
+
     img = request.args.get('img')
+    img = os.path.join(pth, "static", "img", img)
     criteria = request.args.get('metric')
     criteria_value = float(request.args.get('metricValue'))
     upscaling_method = request.args.get('upscalingMethod')

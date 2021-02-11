@@ -477,7 +477,7 @@ min_chunk : int, max_ds_ratio: int) -> Tuple[np.ndarray, np.ndarray, np.ndarray,
     device: str = "cpu"
     
     img_gt : torch.Tensor = torch.from_numpy(imageio.imread(
-        "./static/img/"+img_name).astype(np.float32)).to(device)
+        img_name).astype(np.float32)).to(device)
 
     full_shape : List[int] = list(img_gt.shape)
     root_node = OctreeNode(img_gt, 1, 0, 0)

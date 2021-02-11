@@ -131,7 +131,7 @@ def bilinear_upscale(img : torch.Tensor, scale_factor : int) -> torch.Tensor:
 def bicubic_upscale(img : torch.Tensor, scale_factor : int) -> torch.Tensor:
     img = img.permute(2,0,1).unsqueeze(0)
     img = F.interpolate(img, scale_factor=float(scale_factor), 
-    mode='bicubic')
+    align_corners=False, mode='bicubic')
     img = img[0].permute(1,2,0)
     return img
 

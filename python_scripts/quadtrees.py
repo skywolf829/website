@@ -3,7 +3,6 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 from math import log2
-from utility_functions import *
 import time
 from typing import Dict, List, Tuple
 
@@ -44,6 +43,15 @@ def get_location(full_height: int, full_width : int, depth : int, index : int) -
 
     return (final_x, final_y)
 
+@torch.jit.script
+def AvgPool2D(x : torch.Tensor, size : int):
+    with torch.no_grad():
+        kernel = torch.ones([size, size]).to(x.device)
+        kernel /= kernel.sum()
+        kernel = kernel.view(1, 1, size, size)
+        kernel = kernel.repeat(x.shape[1], 1, 1, 1)
+        out = F.conv2d(x, kernel, stride=size, padding=0, groups=x.shape[1])
+    return out
 
 @torch.jit.script
 class OctreeNodeList:
@@ -120,6 +128,14 @@ def bilinear_upscale(img : torch.Tensor, scale_factor : int) -> torch.Tensor:
     return img
 
 @torch.jit.script
+def bicubic_upscale(img : torch.Tensor, scale_factor : int) -> torch.Tensor:
+    img = img.permute(2,0,1).unsqueeze(0)
+    img = F.interpolate(img, scale_factor=float(scale_factor), 
+    mode='bicubic')
+    img = img[0].permute(1,2,0)
+    return img
+
+@torch.jit.script
 def point_upscale(img : torch.Tensor, scale_factor : int) -> torch.Tensor:
     upscaled_img = torch.zeros([int(img.shape[0]*scale_factor), 
     int(img.shape[1]*scale_factor), 
@@ -162,6 +178,8 @@ def upscale(method: str, img: torch.Tensor, scale_factor: int) -> torch.Tensor:
     up = torch.zeros([1])
     if(method == "bilinear"):
         up = bilinear_upscale(img, scale_factor)
+    elif(method == "bicubic"):
+        up = bicubic_upscale(img, scale_factor)
     elif(method == "point"):
         up = point_upscale(img, scale_factor)
     elif(method == "nearest"):
@@ -453,30 +471,20 @@ min_chunk_size: int, device : str) -> OctreeNodeList:
 
     return nodes
 
-if __name__ == '__main__':
-    max_ds_ratio : int = 64
-    min_chunk : int = 8
-    device: str = "cuda"
-    upscaling_technique : str = "bilinear"
-    downscaling_technique : str = "avgpool"
-    criterion : str = "mre"
-    criterion_value : float = 0.10
-
-    img_name : str = "mixing"
-    img_ext : str = "jpg"
+def compress_from_input(img_name: str, criterion: str, criterion_value: float,
+upscaling_technique: str, downscaling_technique: str, 
+min_chunk : int, max_ds_ratio: int) -> Tuple[np.ndarray, np.ndarray, np.ndarray, float, float, float]:
+    device: str = "cpu"
+    
     img_gt : torch.Tensor = torch.from_numpy(imageio.imread(
-        "TestingData/quadtree_images/"+img_name+"."+img_ext).astype(np.float32)).to(device)
-    #img_gt = AvgPool2D(img_gt.permute(2, 0, 1).unsqueeze(0), 16)[0].permute(1, 2, 0)
+        "./static/img/"+img_name).astype(np.float32)).to(device)
+
     full_shape : List[int] = list(img_gt.shape)
-
-
     root_node = OctreeNode(img_gt, 1, 0, 0)
     nodes : OctreeNodeList = OctreeNodeList()
     nodes.append(root_node)
-    torch.save(nodes, './Output/'+img_name+'.torch')
 
     ##############################################
-    nodes : OctreeNodeList = torch.load('./Output/'+img_name+'.torch')
     start_time : float = time.time()
     nodes : OctreeNodeList = quadtree_SR_compress(
         nodes, img_gt, criterion, criterion_value,
@@ -486,56 +494,33 @@ if __name__ == '__main__':
     end_time : float = time.time()
     print("Compression took %s seconds" % (str(end_time - start_time)))
 
-
     num_nodes : int = len(nodes)
     nodes = compress_nodelist(nodes, full_shape, min_chunk, device)
     concat_num_nodes : int = len(nodes)
 
     print("Concatenating blocks turned %s blocks into %s" % (str(num_nodes), str(concat_num_nodes)))
 
-    torch.save(nodes, "./Output/"+img_name+"_"+upscaling_technique+ \
-        "_"+downscaling_technique+"_"+criterion+str(criterion_value)+"_" +\
-            "ds"+str(max_ds_ratio)+"_chunk"+str(min_chunk)+".torch")
-
-    nodes : OctreeNodeList = torch.load("./Output/"+img_name+"_"+upscaling_technique+ \
-        "_"+downscaling_technique+"_"+criterion+str(criterion_value)+"_" +\
-            "ds"+str(max_ds_ratio)+"_chunk"+str(min_chunk)+".torch")
-
     img_upscaled = nodes_to_full_img(nodes, full_shape, 
     max_ds_ratio, upscaling_technique, 
     downscaling_technique, device)
-
-
-
-    imageio.imwrite("./Output/"+img_name+"_"+upscaling_technique+ \
-        "_"+downscaling_technique+"_"+criterion+str(criterion_value)+"_" +\
-            "ds"+str(max_ds_ratio)+"_chunk"+str(min_chunk)+".jpg", 
-            img_upscaled.cpu().numpy().astype(np.uint8))
 
     img_upscaled_debug, cmap = nodes_to_full_img_debug(nodes, full_shape, 
     max_ds_ratio, upscaling_technique, 
     downscaling_technique, device)
 
-    imageio.imwrite("./Output/"+img_name+"_"+upscaling_technique+ \
-        "_"+downscaling_technique+"_"+criterion+str(criterion_value)+"_" +\
-            "ds"+str(max_ds_ratio)+"_chunk"+str(min_chunk)+"_debug.jpg", 
-            img_upscaled_debug.cpu().numpy().astype(np.uint8))
-
-    imageio.imwrite("./Output/colormap.jpg", cmap.cpu().numpy().astype(np.uint8))
-
     img_upscaled_point = nodes_to_full_img(nodes, full_shape, 
     max_ds_ratio, "point", 
     downscaling_technique, device)
 
-    imageio.imwrite("./Output/"+img_name+"_"+upscaling_technique+ \
-        "_"+downscaling_technique+"_"+criterion+str(criterion_value)+"_" +\
-            "ds"+str(max_ds_ratio)+"_chunk"+str(min_chunk)+"_point.jpg", 
-            img_upscaled_point.cpu().numpy().astype(np.uint8))
 
     final_psnr : float = PSNR(img_upscaled, img_gt)
     final_mse : float = MSE(img_upscaled, img_gt)
     final_mre : float = relative_error(img_upscaled, img_gt)
 
-    print("Final stats:")
-    print("PSNR: %0.02f, MSE: %0.02f, MRE: %0.04f" % (final_psnr, final_mse, final_mre))
-    print("Saved data size: %f kb" % nodes.total_size())
+    
+    img_upscaled = img_upscaled.cpu().numpy().astype(np.uint8)    
+    img_upscaled_debug = img_upscaled_debug.cpu().numpy().astype(np.uint8)
+    img_upscaled_point = img_upscaled_point.cpu().numpy().astype(np.uint8)
+
+    return img_upscaled, img_upscaled_debug, img_upscaled_point, final_psnr, final_mse, final_mre
+

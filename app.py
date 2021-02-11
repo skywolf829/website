@@ -5,6 +5,7 @@ import sys
 import python_scripts.GAN_heightmaps as GAN_heightmaps
 import base64
 import cv2
+from python_scripts.quadtrees import compress_from_input
 
 app = Flask(__name__)
 
@@ -97,6 +98,38 @@ def get_generated_image():
     success, return_img = cv2.imencode(".png", generated_img)
     return_img = return_img.tobytes()
     return jsonify({"img":str(base64.b64encode(return_img))})
+
+@app.route('/img_to_hierarchy')
+def img_to_hierarchy():
+    img = request.args.get('img')
+    criteria = request.args.get('metric')
+    criteria_value = float(request.args.get('metricValue'))
+    upscaling_method = request.args.get('upscalingMethod')
+    downscaling_method = request.args.get('downscalingMethod')
+    min_chunk = int(request.args.get('minChunk'))
+    max_downscale = int(request.args.get('maxDownscale'))
+
+    img_upscaled, img_upscaled_debug, img_upscaled_point, final_psnr, final_mse, final_mre = \
+    compress_from_input(img, criteria, criteria_value,
+    upscaling_method, downscaling_method, 
+    min_chunk, max_downscale)
+
+    img_upscaled = cv2.cvtColor(img_upscaled, cv2.COLOR_RGB2BGR)
+    img_upscaled_debug = cv2.cvtColor(img_upscaled_debug, cv2.COLOR_RGB2BGR)
+    img_upscaled_point = cv2.cvtColor(img_upscaled_point, cv2.COLOR_RGB2BGR)
+    _, img_upscaled = cv2.imencode(".png", img_upscaled)
+    _, img_upscaled_debug = cv2.imencode(".png", img_upscaled_debug)
+    _, img_upscaled_point = cv2.imencode(".png", img_upscaled_point)
+    to_return = {
+        "img_upscaled":str(base64.b64encode(img_upscaled)),
+        "img_upscaled_debug":str(base64.b64encode(img_upscaled_debug)),
+        "img_upscaled_point":str(base64.b64encode(img_upscaled_point)),
+        "psnr":final_psnr,
+        "mse":final_mse,
+        "mre":final_mre
+    }    
+    return jsonify(to_return)
+    
 
 if __name__ == '__main__':
     #app.run(host='127.0.0.1',debug=True,port="12345")

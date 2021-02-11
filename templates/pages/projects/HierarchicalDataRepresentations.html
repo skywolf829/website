@@ -1,17 +1,37 @@
 
 <script>
-    function img_to_quadtree(){
+    function img_to_hierarchy(){
       $.ajax({
-        url: "/img_to_quadtree",
+        url: "/img_to_hierarchy",
         type: "get",
         data: {
-            img: canvas.toDataURL("image/png",1.0),
-
+            img: document.getElementById("img").value,
+            metric: document.getElementById("criteria").value,
+            metricValue: document.getElementById("criteriaValue").value,
+            upscalingMethod: document.getElementById("upscale").value,
+            downscalingMethod: document.getElementById("downscale").value,
+            minChunk: document.getElementById("MinChunk").value,
+            maxDownscale: document.getElementById("MaxDownscale").value
         },
         success: function(response){
-          var python_bytes = response['img']
-          python_bytes = python_bytes.substring(2, python_bytes.length-1)
-          document.getElementById('heightmap').src = "data:img/png;base64,"+python_bytes;        
+            //console.log(response);
+            document.getElementById('hierarchySR').src = "/static/img/"+document.getElementById("img")
+
+            var img_upscaled = response['img_upscaled']
+            img_upscaled = img_upscaled.substring(2, img_upscaled.length-1)
+            document.getElementById('hierarchySR').src = "data:img/png;base64,"+img_upscaled;  
+            
+            var img_upscaled_debug = response['img_upscaled_debug']
+            img_upscaled_debug = img_upscaled_debug.substring(2, img_upscaled_debug.length-1)
+            document.getElementById('hierarchyImageLevels').src = "data:img/png;base64,"+img_upscaled_debug;  
+              
+            var img_upscaled_point = response['img_upscaled_point']
+            img_upscaled_point = img_upscaled_point.substring(2, img_upscaled_point.length-1)
+            document.getElementById('hierarchyImage').src = "data:img/png;base64,"+img_upscaled_point;  
+            
+            document.getElementById("psnr").innerHTML = response['psnr']
+            document.getElementById("mse").innerHTML = response['mse']
+            document.getElementById("mre").innerHTML = response['mre']
         }
       });
     }
@@ -20,9 +40,6 @@
   <!-- Page Content -->
   <section class="py-5">
     <div class="container">
-        <iframe height="720"  width="100%" src="https://www.youtube.com/embed/AeQfgJc6YhE" 
-    frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-  
         <h1 class="font-weight-light">Hierarchical data representations</h1>
         <p class="lead">How images (or volumes!) can be represented as a hierarchy</p>
   
@@ -34,29 +51,40 @@
             in a region, we do not need to do fine-grained simulation there. This allows us to focus our
             computation resources in places that need it most.
         </p>
+        <img src="/static/img/hierarchyExamples.png" class="img-fluid" alt="Responsive image">
+        <figcaption style="font-style:italic;padding:2px;text-align:center;">
+            Examples of hierarchical data use in a few papers. The top row is 
+            from "AMM: Adaptive Multilinear Meshes", the middle row is from 
+            "CPU Isosurface Ray Tracing of Adaptive Mesh Refinement Data",
+            and the bottom row is from "Octree Generating Networks:
+            Efficient Convolutional Architectures for High-resolution 3D Outputs"
+        </figcaption>
+            <br>
         <p>
-            We can also use this hierarchy to save data more efficiently. If large portion of your image
+            We can also use this hierarchy to save data more efficiently. If a large portion of your image
             is the same color, why should we save that same pixel thousands of times? Different techniques 
             do this in different ways, but popular methods are quadtrees/octrees, k-d trees, and
-            adaptive mesh refinement.
+            adaptive mesh refinement (AMR).
         </p>
         <p>
             In some of my recent work, I create an algorithm for compressing a volume (or image in this case)
-            into an hierarchical representation somewhere between octree(quadtree) and adaptive mesh refinement.
-            In short, I develop an algorithm that "super resolves", or upscales, hierarchical data into a uniform
+            into an hierarchical representation similar to an octree(quadtree) using adaptive mesh refinement.
+            I develop an algorithm that "super resolves", or upscales, hierarchical data into a uniform
             high resolution. Any super resolution algorithm can be use - bilinear interpolation, bicubic interpolation,
-            and even neural networks. Second, I create an adaptive refinement algorithm that reduces LOD where able
+            and even neural networks (which I use in my paper!). Second, I create an adaptive refinement 
+            algorithm that reduces levels of detail (LOD) where able
             such that my super resolution algorithm can still super resolve the details with some minimum error
             that is specified by a user. Below is a tool for playing with this algorithm using images. A number
             of parameters can be tweaked:
         </p>
         <ul>
-            <li><b>Metric:</b> the metric that is our error criteria</li>
-            <li><b>Metric value:</b> the value the super resolved picture must stay below/above</li>
+            <li><b>Criteria:</b> the metric that is our error criteria</li>
+            <li><b>Criteria value:</b> the value the super resolved picture must stay below/above</li>
             <li><b>Minimum chunk size:</b> the smallest size possible for a chunk to be. Must be a power of 2.
-            Smaller values will drastically increase computation time. I recommend nothing smaller than 64, otherwise
-            my Raspberry Pi might explode.</li>
-            <li><b>Maximum downscale amount:</b> How much downscaling is allowed to occur. Must be a power of 2 less than 258. 
+            Smaller values will drastically increase computation time. I recommend nothing smaller than 64,
+            otherwise my Raspberry Pi might explode.</li>
+            <li><b>Maximum downscale amount:</b> How much downscaling is allowed to occur. Must be a 
+                power of 2 less than 258. 
                 Recommended 8, 16, 32.</li>
             <li><b>Upscaling technique:</b> The method used when upscaling in the algorithm</li>
             <li><b>Downscaling technique:</b> The method used when downscaling in the algorithm</li>
@@ -66,30 +94,75 @@
             If interested in the code, you cand find it 
             <a href='https://github.com/skywolf829/FlowSTSR'>here</a>.
         </p>
-        
-        <button onclick="request_heightmap()">Compress into hierarchy</button>
+        <label for="criteria">Criteria:</label>
+        <select name="criteria" id="criteria">
+            <option value="mre">Maximum relative error (value stays below)</option>
+            <option value="psnr">PSNR (value stays above)</option>
+            <option value="mse">MSE (value stays below)</option>
+        </select>
         <br>
-        <div class="row">
-            <div class="col-sm">
-                Input image
-                <img id='inputImage' src="/static/img/mixing.jpg">
-            </div>
-            <div class="col-sm">
-                Final image data in hierarchy
-                <img id='hierarchyImage' 
-                src="/static/img/mixing_bilinear_avgpool_mre0.1_ds64_chunk8_point.jpg">
-            </div>
-            <div class="col-sm">
-                Representation of levels of details in the hierarchy
-                <img id='hierarchyImageLevels' 
-                src="/static/img/mixing_bilinear_avgpool_mre0.1_ds64_chunk8_debug.jpg">
-            </div>
-            <div class="col-sm">
-                Final super resolved hierarchy
-                <img id='hierarchySR' src="/static/img/mixing_bilinear_avgpool_mre0.1_ds64_chunk8.jpg">
+        Criteria value: <input type="text" id="criteriaValue" value="0.05">
+        <br>
+        <label for="upscale">Upscaling method:</label>
+        <select name="upscale" id="upscale">
+            <option value="bilinear">Bilinear</option>
+            <option value="point">Point</option>
+            <option value="bicubic">Bicubic</option>
+        </select>
+        <label for="downscale">Downscaling method:</label>
+        <select name="downscale" id="downscale">
+            <option value="avgpool">Average pooling</option>
+            <option value="subsample">Subsample</option>
+        </select>
+        <br>
+        Maximum Downscaling: <input type="text" id="MaxDownscale" value="16">
+        <br>
+        Minimum chunk size: <input type="text" id="MinChunk" value="64">
+        <br>
+        <label for="img">Input image:</label>
+        <select name="img" id="img">
+            <option value="mixing.jpg">Mixing</option>
+            <option value="snickers.jpg">Cat</option>
+            <option value="iso.jpg">Isotropic</option>
+            <option value="Lenna.jpg">Lenna</option>
+        </select>
+        <br>
+        <br>
+        <br>
+
+        <p>PSNR: <a id="psnr">89.02</a>, MSE: <a id="mse">8.85</a>, MRE: <a id="mre">0.0500</a></p>
+        <br>
+        <button onclick="img_to_hierarchy()">Compress into hierarchy</button>
+        <p><a style='color:red'><b>WARNING:</b></a> minimum chunk sizes 32 and lower paired with relatively high criteria
+            values (high PSNR, low MRE/MSE) can be very slow to compute. 
+            Can take up to 40 minutes with extreme settings.</p>
+        <br>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3">
+                    Input image
+                    <img id='inputImage' src="/static/img/mixing.jpg"
+                    class="img-fluid" alt="Responsive image">
+                </div>
+                <div class="col-md-3">
+                    Final image data in hierarchy
+                    <img id='hierarchyImage' 
+                    src="/static/img/mixing_bilinear_avgpool_mre0.05_ds64_chunk8_point.jpg"
+                    class="img-fluid" alt="Responsive image">
+                </div>
+                <div class="col-md-3">
+                    Levels of details in the hierarchy
+                    <img id='hierarchyImageLevels' 
+                    src="/static/img/mixing_bilinear_avgpool_mre0.05_ds64_chunk8_debug.jpg"
+                    class="img-fluid" alt="Responsive image">
+                </div>
+                <div class="col-md-3">
+                    Final super resolved hierarchy
+                    <img id='hierarchySR' src="/static/img/mixing_bilinear_avgpool_mre0.05_ds64_chunk8.jpg"
+                    class="img-fluid" alt="Responsive image">
+                </div>
             </div>
         </div>
-
     </div>
   </section>
   

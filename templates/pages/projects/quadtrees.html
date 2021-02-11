@@ -1,0 +1,95 @@
+
+<script>
+    function img_to_quadtree(){
+      $.ajax({
+        url: "/img_to_quadtree",
+        type: "get",
+        data: {
+            img: canvas.toDataURL("image/png",1.0),
+
+        },
+        success: function(response){
+          var python_bytes = response['img']
+          python_bytes = python_bytes.substring(2, python_bytes.length-1)
+          document.getElementById('heightmap').src = "data:img/png;base64,"+python_bytes;        
+        }
+      });
+    }
+  </script>
+  
+  <!-- Page Content -->
+  <section class="py-5">
+    <div class="container">
+        <iframe height="720"  width="100%" src="https://www.youtube.com/embed/AeQfgJc6YhE" 
+    frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  
+        <h1 class="font-weight-light">Hierarchical data representations</h1>
+        <p class="lead">How images (or volumes!) can be represented as a hierarchy</p>
+  
+        <p>
+            Hierarchical data structures can help scientists with all kinds of problems. When I refer to 
+            hierarchies, I mean anything that has a tree-like or casicading structure. These hierarchies
+            allow data to be represented with different ganularity, or in other terms, different levels of 
+            detail (LOD), in different areas. For instance, in fluid simulations, if there are few fluid particles
+            in a region, we do not need to do fine-grained simulation there. This allows us to focus our
+            computation resources in places that need it most.
+        </p>
+        <p>
+            We can also use this hierarchy to save data more efficiently. If large portion of your image
+            is the same color, why should we save that same pixel thousands of times? Different techniques 
+            do this in different ways, but popular methods are quadtrees/octrees, k-d trees, and
+            adaptive mesh refinement.
+        </p>
+        <p>
+            In some of my recent work, I create an algorithm for compressing a volume (or image in this case)
+            into an hierarchical representation somewhere between octree(quadtree) and adaptive mesh refinement.
+            In short, I develop an algorithm that "super resolves", or upscales, hierarchical data into a uniform
+            high resolution. Any super resolution algorithm can be use - bilinear interpolation, bicubic interpolation,
+            and even neural networks. Second, I create an adaptive refinement algorithm that reduces LOD where able
+            such that my super resolution algorithm can still super resolve the details with some minimum error
+            that is specified by a user. Below is a tool for playing with this algorithm using images. A number
+            of parameters can be tweaked:
+        </p>
+        <ul>
+            <li><b>Metric:</b> the metric that is our error criteria</li>
+            <li><b>Metric value:</b> the value the super resolved picture must stay below/above</li>
+            <li><b>Minimum chunk size:</b> the smallest size possible for a chunk to be. Must be a power of 2.
+            Smaller values will drastically increase computation time. I recommend nothing smaller than 64, otherwise
+            my Raspberry Pi might explode.</li>
+            <li><b>Maximum downscale amount:</b> How much downscaling is allowed to occur. Must be a power of 2 less than 258. 
+                Recommended 8, 16, 32.</li>
+            <li><b>Upscaling technique:</b> The method used when upscaling in the algorithm</li>
+            <li><b>Downscaling technique:</b> The method used when downscaling in the algorithm</li>
+        </ul>
+        
+        <p>
+            If interested in the code, you cand find it 
+            <a href='https://github.com/skywolf829/FlowSTSR'>here</a>.
+        </p>
+        
+        <button onclick="request_heightmap()">Compress into hierarchy</button>
+        <br>
+        <div class="row">
+            <div class="col-sm">
+                Input image
+                <img id='inputImage' src="/static/img/mixing.jpg">
+            </div>
+            <div class="col-sm">
+                Final image data in hierarchy
+                <img id='hierarchyImage' 
+                src="/static/img/mixing_bilinear_avgpool_mre0.1_ds64_chunk8_point.jpg">
+            </div>
+            <div class="col-sm">
+                Representation of levels of details in the hierarchy
+                <img id='hierarchyImageLevels' 
+                src="/static/img/mixing_bilinear_avgpool_mre0.1_ds64_chunk8_debug.jpg">
+            </div>
+            <div class="col-sm">
+                Final super resolved hierarchy
+                <img id='hierarchySR' src="/static/img/mixing_bilinear_avgpool_mre0.1_ds64_chunk8.jpg">
+            </div>
+        </div>
+
+    </div>
+  </section>
+  

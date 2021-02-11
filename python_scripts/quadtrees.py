@@ -551,7 +551,7 @@ min_chunk_size: int, device : str) -> OctreeNodeList:
 def compress_from_input(img_name: str, criterion: str, criterion_value: float,
 upscaling_technique: str, downscaling_technique: str, 
 min_chunk : int, max_ds_ratio: int) -> Tuple[np.ndarray, np.ndarray, np.ndarray, float, float, float]:
-    device: str = "cuda"
+    device: str = "cpu"
     
     img_gt : torch.Tensor = torch.from_numpy(imageio.imread(
         img_name).astype(np.float32)).to(device)

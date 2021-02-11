@@ -18,7 +18,8 @@ def log_visitor():
     now = datetime.now()
     dt = now.strftime("%d/%m/%Y %H:%M:%S")
 
-    f = open("log.txt", "a")
+    pth = os.path.dirname(os.path.abspath(__file__))
+    f = open(os.path.join(pth,"log.txt"), "a")
     f.write(dt + ": " + str(visitor_ip) + " " + str(visitor_requested_path) + "\n")
     f.close()
 

@@ -1,4 +1,4 @@
 *.pt
 python_scripts/__pycache__/*
-log.txt
+/log.txt
 *.pyc

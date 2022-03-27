@@ -6,11 +6,18 @@ import python_scripts.GAN_heightmaps as GAN_heightmaps
 import base64
 import cv2
 from python_scripts.quadtrees import compress_from_input
+import requests 
+import mechanicalsoup
+from bs4 import BeautifulSoup
+import shutil
 
 app = Flask(__name__)
 
 global heightmap_model
 heightmap_model = None
+
+global items_list
+items_list = None
 
 def log_visitor():
     visitor_ip = request.remote_addr
@@ -45,6 +52,103 @@ def project():
             render_template('/pages/projects_body.html') + \
            "</body></html>" 
 
+@app.route('/TCFItemTracker')
+def TCFItemTracker():
+    global items_list
+    log_visitor()
+    if(items_list is None):
+        #download_images();
+        populate_items();
+        
+    return render_template("/pages/projects/CycleItemTracker.html", 
+                           items_list=items_list) 
+
+def download_images():
+    url = "https://thecyclefrontier.fandom.com/wiki/Loot"
+    page = requests.get(url)
+    
+    soup = BeautifulSoup(page.text)
+    rows = soup.find("div", {"id" : "content"}).find("tbody").find_all("tr")
+    
+    for row in rows:        
+        cells = row.find_all("td")
+        
+        if(len(cells) > 0):
+            if(cells[1].string is None):
+                if(cells[1].find("span") is not None):
+                    name = cells[1].find("span").string.strip()
+                elif(cells[1].find("a") is not None):
+                    name = cells[1].find("a").string.strip()
+            else:                
+                name = cells[1].string.strip()
+                
+            if(cells[0].find("img") is not None):
+                print(cells[0])
+                image_src = cells[0].find("a")['href']
+                img = requests.get(image_src, stream=True)
+                with open(os.path.join(os.getcwd(), "static", "img", 
+                          name+".png"), 'wb') as f:
+                    img.raw.decode_content = True
+                    shutil.copyfileobj(img.raw, f) 
+                
+def populate_items():
+    global items_list
+    items_list = []
+    url = "https://thecyclefrontier.fandom.com/wiki/Loot"
+    browser = mechanicalsoup.Browser()
+    page = browser.get(url)
+    
+    soup = page.soup
+    rows = soup.find("div", {"id" : "content"}).find("tbody").find_all("tr")
+    
+    item_no = 0
+    for row in rows:        
+        cells = row.find_all("td")
+        name = ""
+        link = ""
+        image_src = ""
+        weight = ""
+        sell_price = ""
+        price_per_weight =""
+        
+        if(len(cells) > 0):
+            if(cells[1].string is None):
+                if(cells[1].find("span") is not None):
+                    name = cells[1].find("span").string.strip()
+                elif(cells[1].find("a") is not None):
+                    name = cells[1].find("a").string.strip()
+                    link = cells[1].find("a", href=True)['href']
+                    link = link.replace("/wiki", 
+                            "https://thecyclefrontier.fandom.com/wiki")
+            else:                
+                name = cells[1].string.strip()
+            
+            if(cells[0].find("img") is not None):
+                image_src = "img/"+name+".png"
+
+            if(cells[2].string is not None):
+                weight = cells[2].string.strip()
+                
+            if(cells[3].string is not None):
+                sell_price = cells[3].string.strip()
+                
+            if(cells[4].string is not None):
+                price_per_weight = cells[4].string.strip() 
+               
+            #print(f"{name}: {link} {weight} {price_per_weight}")
+            item = {
+                "id":str(item_no),
+                "name":name,
+                "link":link,
+                "image_src":image_src,
+                "weight":weight,
+                "price_per_weight":price_per_weight,
+                "sell_price":sell_price
+            }
+            items_list.append(item)
+            item_no += 1
+    
+    
 @app.route('/projects/<pagename>')
 def project_pages(pagename=None):
     log_visitor()

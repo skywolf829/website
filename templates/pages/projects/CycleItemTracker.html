@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="http://yui.yahooapis.com/3.18.1/build/yui/yui-min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>        
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <script>
+          
+        </script>
+        <title>The Cycle: Frontier Items Tracker</title>
+        <link rel="stylesheet" href={{ url_for('static', filename="css/TCFItemTracker.css") }}>
+    </head>
+    <body class="d-flex h-100 text-center text-white bg-dark">
+      <div class="column">
+        <div align="left" class="lead-text-box">
+          <p class="lead-text-box-header">Welcome, prospector!</p>
+          <p>
+           This site is here for you to track the items you need for 
+          base upgrades and crafting. Drag items from the left into 
+          the "Need" and "Want" categories. 
+          Delete items from the want list by clicking them, or from the
+          need list by clicking the trash icon on the right.
+          </p>
+          <p>
+          Feel free to tinker with my code, available
+          <a href="https://github.com/skywolf829/TheCycleFrontierItemTracker"> on GitHub </a>. 
+          </p>
+          <p>
+          Thanks, and happy prospecting!
+          </p>
+        </div>
+        <div>
+      <div class="box">
+        <div>                
+          <h3 align="center" style="font-size: min(4vh, 4vw);">All items</h3>
+          <input type="text" style='width:20vw; height:2.5vh;' id="searchInput" onkeyup="searchItems()" placeholder="Search...">
+          
+          <div id="all_items_container" class="items-box">
+          {% for item in items_list: %}
+            <img src= {{ url_for('static', filename=item['image_src']) }} 
+            title= "{{ item['name'] }}" 
+            class="item"  
+            id="{{ item['id'] + " " + item['name'] }}"
+            draggable="true"/>
+          {% endfor %}
+          </div>
+        </div>
+        <div class="need-want-boxes">      
+          <div>    
+            <h3 align="left" style="font-size: min(4vh, 4vw);">Need</h3>  
+            <div id="need_items" class="need-box"></div>
+          </div>
+          <div>    
+            <h3 align="left" style="font-size: min(4vh, 4vw);">Want</h3>        
+            <div id="want_items" class="want-box"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <footer class="row mt-auto text-white-50">
+          <p>Made by Skylar Wurster (swwurster@gmail.com)</p>
+        </footer>
+      </div>
+      </div>
+      </div>
+      
+
+
+
+          <script>
+            var dragging = false;
+
+            function searchItems(){
+              var input, filter, i, txtValue;
+              input = document.getElementById('searchInput');
+              filter = input.value.toUpperCase();
+              
+              // Loop through all list items, and hide those who don't match the search query
+              for (i = 0; i < items.length; i++) {
+                txtValue = items[i].id;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                  items[i].style.display = "";
+                } else {
+                  items[i].style.display = "none";
+                }
+              }
+            }
+            /* draggable element */
+            const items = document.querySelectorAll('.item');
+            items.forEach(item => {
+              item.addEventListener('dragstart', dragStart);
+            });
+            function dragStart(e) {
+                e.dataTransfer.setData('text/plain', e.target.id);
+                dragging = true;
+            }
+
+
+            /* drop targets */
+            const need_items = document.getElementById('need_items');
+            const want_items = document.getElementById('want_items');
+
+            need_items.addEventListener('dragenter', dragEnter);
+            need_items.addEventListener('dragover', dragEnter);
+            need_items.addEventListener('dragleave', dragLeave);
+            need_items.addEventListener('drop', drop);
+            
+            want_items.addEventListener('dragenter', dragEnter);
+            want_items.addEventListener('dragover', dragEnter);
+            want_items.addEventListener('dragleave', dragLeave);
+            want_items.addEventListener('drop', drop);
+           
+            
+            loadCookieData();
+
+            function item_id_to_object(id){
+              for(var i = 0; i < items.length; i++){
+                node = items[i];
+                var node_id = new String(node.id);
+                node_id = node_id.split(" ")[0];
+                if(id === node_id){
+                  return node;
+                }
+              }
+              return null;
+            }
+
+            function updateCookie(){
+              var data = createCookieInfo();
+              setCookie("data", data, 365*1);
+            }
+            function loadCookieData(){
+              d = getCookie("data");
+              d = d.split(",");
+              no_need_items = parseInt(d[0]);
+              no_want_items = parseInt(d[1]);
+              var ind = 2;
+              end = 2+(no_need_items*3)
+              for(ind = 2; ind < end; ind+=3){
+                item_id = d[ind];
+                item_have_num = d[ind+1];
+                item_total_num = d[ind+2];
+                node = item_id_to_object(item_id);
+                need_item = add_item_to_need(node);
+                need_item.children[3].innerHTML = 
+                  item_have_num +"&frasl;" + item_total_num;
+              }
+              
+              for(; ind < d.length; ind++){
+                item_id = d[ind];
+                node = item_id_to_object(item_id);
+                add_item_to_want(node);
+              }
+  
+            }
+            function createCookieInfo(){
+              
+              all_data = []
+              no_need_items = need_items.childNodes.length;
+              no_want_items = want_items.childNodes.length;
+              all_data.push(no_need_items);
+              all_data.push(no_want_items);
+              
+              for(var indx = 0; indx < need_items.childNodes.length; indx++){
+                child = need_items.childNodes[indx];
+                var id = new String(child.id)
+                id = id.split(" ")[0];
+                all_data.push(id);
+                var frac = child.childNodes[3].innerHTML;
+                var fraction_elements = frac.split("\u2044");
+                var left_side = parseInt(fraction_elements[0]);
+                var right_side = parseInt(fraction_elements[1]);
+                all_data.push(left_side);
+                all_data.push(right_side);
+              }
+
+              for(var indx = 0; indx < want_items.childNodes.length; indx++){
+                child = want_items.childNodes[indx];
+                var id = new String(child.id)
+                id = id.split(" ")[0];
+                all_data.push(id);
+              }
+
+              return all_data.join(",");
+            }
+
+            function setCookie(name,value,days) {
+              var expires = "";
+              if (days) {
+                  var date = new Date();
+                  date.setTime(date.getTime() + (days*24*60*60*1000));
+                  expires = "; expires=" + date.toUTCString();
+              }
+              document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+          }
+          function getCookie(name) {
+              var nameEQ = name + "=";
+              var ca = document.cookie.split(';');
+              for(var i=0;i < ca.length;i++) {
+                  var c = ca[i];
+                  while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                  if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+              }
+              return null;
+          }
+          function eraseCookie(name) {   
+              document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+          }
+
+            function dragEnter(e) {
+              e.preventDefault();
+              if(dragging){
+                if (e.target == need_items ||
+                  e.target == want_items){
+                  e.target.classList.add('drag-over');
+                }
+                else if(need_items.contains(e.target)){
+                  need_items.classList.add('drag-over');
+                }
+                else if(want_items.contains(e.target)){
+                  want_items.classList.add('drag-over');
+                }
+              }              
+              else{
+                e.stopPropagation();
+              }
+            }
+
+            function dragLeave(e) {
+              if(dragging){
+                if(e.target == need_items ||
+                  e.target == want_items){
+                  e.target.classList.remove('drag-over');
+                }
+                else if(need_items.contains(e.target)){
+                  need_items.classList.remove('drag-over');
+                }
+                else if(want_items.contains(e.target)){
+                  want_items.classList.remove('drag-over');
+                }
+              }
+              else{
+                e.stopPropagation();
+              }
+            }
+
+            function drop(e) {
+                dragging = false;
+                if(e.target == need_items ||
+                  e.target == want_items){
+                    e.target.classList.remove('drag-over');
+                }
+                else if(need_items.contains(e.target)){
+                  need_items.classList.remove('drag-over');
+                }
+                else if(want_items.contains(e.target)){
+                  want_items.classList.remove('drag-over');
+                }
+                
+
+                // get the draggable element
+                const id = e.dataTransfer.getData('text/plain');
+                item = document.getElementById(id);
+                if(item && item.className == "item"){
+                  if(e.target.id == "need_items" ||
+                    need_items.contains(e.target)){
+                    add_item_to_need(item);
+                  }
+                  else if(e.target.id == "want_items" ||
+                    want_items.contains(e.target)){
+                    add_item_to_want(item);
+                  }
+                }                
+            }
+          
+            function add_item_to_need(original_item){
+
+              const new_item = document.createElement("div");
+              new_item.classList.add("need-item");
+              new_item.id = original_item.id + " need";
+
+              const new_item_img_div = document.createElement("img");
+              new_item_img_div.style.height = "min(10vh, 3vw)";
+              new_item_img_div.src = original_item.src;
+              //new_item_img_div.style.display = "block";
+              //new_item_img_div.style.height = "10vh";
+              //new_item_img_div.style.width = "10vh";
+              
+
+              const new_item_name_div = document.createElement("div");
+              //new_item_name_div.style.width = "20%";
+              new_item_name_div.style.fontSize = "min(1.75vw, 1.75vh)";
+              new_item_name_div.style.justifyContent = "center";
+              new_item_name_div.style.textAlign = "center";
+              var name = original_item.id.split(" ");
+              name.splice(0,1);
+              name = name.join(" "); 
+              new_item_name_div.innerHTML += name
+              
+              const first_buttons_div = document.createElement("div");
+              //first_buttons_div.style.width = "25%";             
+              first_buttons_div.innerHTML += '<button onclick="handle_left_plus_click(this)" class="button add-button">+</button>';
+              first_buttons_div.innerHTML += '<button onclick="handle_left_minus_click(this)" class="button subtract-button">-</button>';
+
+              const fraction_div = document.createElement("div");
+              //fraction_div.style.width = "10%";  
+              fraction_div.style.fontSize = "min(3vw, 3vh)";
+              fraction_div.innerHTML += '1&frasl;8';
+
+              const second_buttons_div = document.createElement("div");
+              //second_buttons_div.style.width = "25%";  
+              second_buttons_div.innerHTML += '<button onclick="handle_right_plus_click(this)" class="button add-button">+</button>';
+              second_buttons_div.innerHTML += '<button onclick="handle_right_minus_click(this)" class="button subtract-button">-</button>';
+
+              const trash_button_div = document.createElement("div");
+              trash_button_div.innerHTML = "&#128465";
+              trash_button_div.style.cursor = "pointer";
+              trash_button_div.addEventListener('click', function handleClick(event){
+                event.target.parentElement.remove();
+                updateCookie();
+              });
+
+              new_item.appendChild(new_item_img_div);
+              new_item.appendChild(new_item_name_div);
+              new_item.appendChild(first_buttons_div);
+              new_item.appendChild(fraction_div);
+              new_item.appendChild(second_buttons_div);
+              new_item.appendChild(trash_button_div);
+              need_items.appendChild(new_item);
+
+              updateCookie();
+              return new_item;
+            }
+
+            function handle_left_plus_click(element){
+              const p = element.parentElement.parentElement;
+              const frac_div = p.children[3];
+              const frac = frac_div.innerHTML;
+              var fraction_elements = frac.split("\u2044");
+              var left_side = parseInt(fraction_elements[0]);
+              var right_side = parseInt(fraction_elements[1]);
+              left_side = left_side + 1;
+              frac_div.innerHTML = left_side + "&frasl;" + right_side;
+              updateCookie();
+            }
+
+            function handle_left_minus_click(element){
+              const p = element.parentElement.parentElement;
+              const frac_div = p.children[3];
+              const frac = frac_div.innerHTML;
+              var fraction_elements = frac.split("\u2044");
+              var left_side = parseInt(fraction_elements[0]);
+              var right_side = parseInt(fraction_elements[1]);
+              left_side = left_side - 1;
+              left_side = Math.max(0, left_side)
+              frac_div.innerHTML = left_side + "&frasl;" + right_side;
+              updateCookie();
+            }
+
+            function handle_right_plus_click(element){
+              const p = element.parentElement.parentElement;
+              const frac_div = p.children[3];
+              const frac = frac_div.innerHTML;
+              var fraction_elements = frac.split("\u2044");
+              var left_side = parseInt(fraction_elements[0]);
+              var right_side = parseInt(fraction_elements[1]);
+              right_side = right_side + 1;
+              frac_div.innerHTML = left_side + "&frasl;" + right_side;
+              updateCookie();
+            }
+
+            function handle_right_minus_click(element){
+              const p = element.parentElement.parentElement;
+              const frac_div = p.children[3];
+              const frac = frac_div.innerHTML;
+              var fraction_elements = frac.split("\u2044");
+              var left_side = parseInt(fraction_elements[0]);
+              var right_side = parseInt(fraction_elements[1]);
+              right_side = right_side - 1;
+              right_side = Math.max(1, right_side)
+              frac_div.innerHTML = left_side + "&frasl;" + right_side;
+              updateCookie();
+            }
+
+            function add_item_to_want(original_item){
+              const new_item_img_div = document.createElement("img");
+              new_item_img_div.id = original_item.id + " want";
+              new_item_img_div.style.height = "min(10vh, 3vw)";
+              new_item_img_div.style.width = "min(10vh, 3vw)";
+              new_item_img_div.src = original_item.src;              
+              new_item_img_div.style.cursor = "pointer";
+              new_item_img_div.addEventListener('click', function handleClick(event){
+                event.target.remove();
+                updateCookie();
+              });
+              new_item_img_div.addEventListener("mouseenter", function( event ) {
+                event.target.style.background = "red";
+              });
+              new_item_img_div.addEventListener("mouseleave", function( event ) {
+                event.target.style.background = "";
+              });
+              want_items.appendChild(new_item_img_div);
+
+              updateCookie();
+            }
+          </script>
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+        </div>
+        
+    </body>
+
+    
+</html>

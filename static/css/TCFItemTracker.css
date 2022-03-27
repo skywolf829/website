@@ -1,0 +1,150 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Refinery, ui-sans, system-ui, Helvetica, Arial, sans-serif;
+    
+}
+
+body {
+    background-color: #fff;
+    overflow: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 20px;
+}
+::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #d6dee1;
+    border-radius: 20px;
+    border: 6px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #a8bbbf;
+  }
+.box{
+    border: solid 0px #ccc;
+    width: 96vw;
+    height: 75vh;
+    display: grid;
+    grid-template-columns: 25vw 65vw;
+    margin: 2vw;
+}
+
+.lead-text-box{
+    width: 80vw;
+    height: 15vh;
+    margin-left: 10vw;
+    margin-right: 10vw;
+    font-size: 1vh;
+}
+.lead-text-box-header{
+    font-size: 2vh;
+}
+.need-want-boxes{
+    border: solid 0px rgb(117, 117, 117);
+    display: grid;
+    grid-template-rows: 45vh 13vh;  
+    margin: 1vw;
+}
+.need-box {
+    border: solid 3px rgb(117, 117, 117);
+    height: 40vh;
+    /* align items in the box */
+    display: grid;
+    grid-auto-flow: row;
+    grid-template-columns: repeat(auto-fill, 28vw);    
+    grid-template-rows: repeat(auto-fill, 6vh);
+    justify-content: space-evenly;    
+    overflow: auto;
+    margin: 0vw;
+}
+.need-item {
+    border: solid 0px rgb(255, 3, 179);
+    height: 6vh;
+    width: 28vw;
+    /* align items in the box */
+    display: grid;
+    grid-template-columns: 6vw 10vw 3.5vw 3vw 3.5vw 2vw;
+    margin: 0vw;
+    justify-content: space-evenly;
+    text-align: center;
+    align-items: center; 
+}
+
+.want-box {
+    border: solid 3px rgb(117, 117, 117);
+    height: 10vh;
+    /* align items in the box */
+    display: grid;
+    grid-auto-flow: row;
+    grid-template-columns: repeat(auto-fill, 4vw);
+    grid-template-rows: repeat(auto-fill, 4vh);
+    justify-content: space-evenly;
+    overflow: auto;
+}
+
+.items-box {
+    border: solid 3px rgb(117, 117, 117);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 5.5vw);
+    grid-template-rows: repeat(auto-fill, 5.5vw);
+    grid-auto-flow: row;
+    overflow: auto;    
+    height: 60vh;
+    justify-content: space-evenly;
+    margin: 0vw;
+}
+
+
+.drag-over {
+    border: dashed 3px red;
+}
+
+.item {
+    height: 5.5vw;
+    width: 5.5vw;
+    /*background-color: #F0DB4F; */
+
+}
+
+.hide {
+    display: none;
+}
+
+.flex-container{
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    margin: 20px;
+}
+
+.add-button {
+    background-color: #28f093;
+    border: 1px;
+    width: min(1.5vw, 3vh);
+    height: min(1.5vw, 3vh);
+    color: rgb(0, 0, 0);
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: min(1vw, 2vh);
+    border-radius: 50%;
+  }
+
+.subtract-button {
+    background-color: #f73c3c;
+    border: 1px;
+    width: min(1.5vw, 3vh);
+    height: min(1.5vw, 3vh);
+    color: rgb(0, 0, 0);
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: min(1vw, 2vh);
+    border-radius: 50%;
+  }

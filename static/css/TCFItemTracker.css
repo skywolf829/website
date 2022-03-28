@@ -43,7 +43,10 @@ body {
     font-size: 1vh;
 }
 .lead-text-box-header{
-    font-size: 2vh;
+    font-size: min(2.5vh, 3vw);
+}
+.text-box{
+    font-size: min(1.5vh, 2vw);
 }
 .need-want-boxes{
     border: solid 0px rgb(117, 117, 117);

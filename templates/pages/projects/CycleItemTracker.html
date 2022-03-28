@@ -283,7 +283,7 @@
               new_item.id = original_item.id + " need";
 
               const new_item_img_div = document.createElement("img");
-              new_item_img_div.style.height = "min(10vh, 3vw)";
+              new_item_img_div.style.height = "min(10vh, 6vw)";
               new_item_img_div.src = original_item.src;
               //new_item_img_div.style.display = "block";
               //new_item_img_div.style.height = "10vh";
@@ -319,7 +319,7 @@
               const trash_button_div = document.createElement("div");
               trash_button_div.innerHTML = "&#128465";
               trash_button_div.style.cursor = "pointer";
-              trash_button_div.style.fontSize = "min(1vw, 1vh)";
+              trash_button_div.style.fontSize = "min(2vw, 2vh)";
               trash_button_div.addEventListener('click', function handleClick(event){
                 event.target.parentElement.remove();
                 updateCookie();

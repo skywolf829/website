@@ -300,6 +300,7 @@
               new_item_name_div.innerHTML += name
               
               const first_buttons_div = document.createElement("div");
+              //first_buttons_div.className = "col";
               //first_buttons_div.style.width = "25%";             
               first_buttons_div.innerHTML += '<button onclick="handle_left_plus_click(this)" class="button add-button">+</button>';
               first_buttons_div.innerHTML += '<button onclick="handle_left_minus_click(this)" class="button subtract-button">-</button>';
@@ -317,6 +318,7 @@
               const trash_button_div = document.createElement("div");
               trash_button_div.innerHTML = "&#128465";
               trash_button_div.style.cursor = "pointer";
+              trash_button_div.style.fontSize = "min(2vw, 2vh)";
               trash_button_div.addEventListener('click', function handleClick(event){
                 event.target.parentElement.remove();
                 updateCookie();

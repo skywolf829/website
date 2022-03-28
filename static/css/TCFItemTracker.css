@@ -111,6 +111,7 @@ body {
 .item {
     height: 5.5vw;
     width: 5.5vw;
+    -webkit-touch-callout: none;
     /*background-color: #F0DB4F; */
 
 }

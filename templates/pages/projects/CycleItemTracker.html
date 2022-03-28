@@ -133,27 +133,28 @@
             }
             function loadCookieData(){
               d = getCookie("data");
-              d = d.split(",");
-              no_need_items = parseInt(d[0]);
-              no_want_items = parseInt(d[1]);
-              var ind = 2;
-              end = 2+(no_need_items*3)
-              for(ind = 2; ind < end; ind+=3){
-                item_id = d[ind];
-                item_have_num = d[ind+1];
-                item_total_num = d[ind+2];
-                node = item_id_to_object(item_id);
-                need_item = add_item_to_need(node);
-                need_item.children[3].innerHTML = 
-                  item_have_num +"&frasl;" + item_total_num;
+              if(d){
+                d = d.split(",");
+                no_need_items = parseInt(d[0]);
+                no_want_items = parseInt(d[1]);
+                var ind = 2;
+                end = 2+(no_need_items*3)
+                for(ind = 2; ind < end; ind+=3){
+                  item_id = d[ind];
+                  item_have_num = d[ind+1];
+                  item_total_num = d[ind+2];
+                  node = item_id_to_object(item_id);
+                  need_item = add_item_to_need(node);
+                  need_item.children[3].innerHTML = 
+                    item_have_num +"&frasl;" + item_total_num;
+                }
+                
+                for(; ind < d.length; ind++){
+                  item_id = d[ind];
+                  node = item_id_to_object(item_id);
+                  add_item_to_want(node);
+                }
               }
-              
-              for(; ind < d.length; ind++){
-                item_id = d[ind];
-                node = item_id_to_object(item_id);
-                add_item_to_want(node);
-              }
-  
             }
             function createCookieInfo(){
               

@@ -5,11 +5,20 @@
   
     <h1 class="font-weight-light">SciVis Class Final Project</h1>
     <p class="lead">Stable Fluids</p>
-
-    <h2>Background</h2>
+    
     <p>For my final project in Scientific Visualization, a class taught by my advisor Han-Wei Shen in Spring 2022, I experiment with an implementation 
       of the paper <a href="https://d2f99xq7vri1nk.cloudfront.net/legacy_app_files/pdf/ns.pdf">Stable Fluids</a> by Jos Stam.
       My code is available <a href="https://github.com/skywolf829/SciVisFinalProject">here</a>, and can be ran with "python Code/main.py" after downloading. 
+      For this project, I accomodate an <a href="https://github.com/GregTJ/stable-fluids">existing Stable Fluids solution in Python</a> 
+      by adding functionality for the experiments performed, such as boundaries, custom ink setups, and moving sources.
+      From the other Stable Fluids implementation, I use the fluid solver (fluid.py), which is responsible for a single timestep advection,
+      and numerical.py, which creates a few math operations used by the fluid solver. 
+      However, adjustments are made to the to the initialization and step in fluid.py to accomodate boundaries, which I added. 
+      Main.py is written by me for the examples shown at the end, each of which are not able to be done 
+      with the original code.
+
+    <h2>Background</h2>
+    
     </p> 
     <p>
       Fluid like behaviour is a very fascinating topic, especially because we still haven't found exact equations to model the fluids themselves. 
@@ -27,8 +36,7 @@
     </p>
 
     <p>
-      In this project, we accomodate an <a href="https://github.com/GregTJ/stable-fluids">existing Stable Fluids solution in Python</a> 
-      by adding functionality for the experiments performed, such as boundaries, custom ink setups, and moving sources.
+     
     </p>
 
     <h2>Method</h2>

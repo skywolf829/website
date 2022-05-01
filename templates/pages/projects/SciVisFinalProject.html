@@ -6,18 +6,33 @@
     <h1 class="font-weight-light">SciVis Class Final Project</h1>
     <p class="lead">Stable Fluids</p>
 
+    <h2>Background</h2>
     <p>For my final project in Scientific Visualization, a class taught by my advisor Han-Wei Shen in Spring 2022, I experiment with an implementation 
       of the paper <a href="https://d2f99xq7vri1nk.cloudfront.net/legacy_app_files/pdf/ns.pdf">Stable Fluids</a> by Jos Stam.
-    My code is available at https://github.com/skywolf829/SciVisFinalProject.
+      My code is available <a href="https://github.com/skywolf829/SciVisFinalProject">here</a>, and can be ran with "python Code/main.py" after downloading. 
     </p> 
-
-    <p>The implementation is not as rigorous as other solutions to the Navier Stokes equations, but gives a good enough visualization, especially for cinematic reasons
+    <p>
+      Fluid like behaviour is a very fascinating topic, especially because we still haven't found exact equations to model the fluids themselves. 
+      However, we do have approximations or estimates of equations that determine fluid motion.
+      The Navier-Stokes equations are one such model for fluid motion that do well, for which we do not have an analytical solution yet. 
+      If you have a solution to the Navier-Stokes equations, you
+      would win $1,000,000 since it is a Millenium Prize Problem! Therefore, to solve nonlinear differential equation, different approximations
+      and discritized solutions exist, including the one this project focuses on called "Stable Fluids".
+    </p>
+    
+    <p>This implementation is not as rigorous as other solutions to the Navier Stokes equations, but gives a good enough visualization, especially for cinematic reasons
       within games and movies. The solutions using this paper's implementation are more "diffused" than other Eulerian solutions. As a benefit, the simulation speed
-      is extremely fast, and it is guaranteed to not "blow up" as other solutions will under certain conditions.
+      is extremely fast, and it is guaranteed to not "blow up" as other solutions will under certain conditions. On the engineering 
+      side, it is also much easier to both understand and implement, and lends itself to parallelization nicely.
     </p>
 
+    <p>
+      In this project, we accomodate an <a href="https://github.com/GregTJ/stable-fluids">existing Stable Fluids solution in Python</a> 
+      by adding functionality for the experiments performed, such as boundaries, custom ink setups, and moving sources.
+    </p>
+
+    <h2>Method</h2>
     <img width="320" src="/static/img/StableFluids2.png"></img>
-    
 
     <p>
       Above is the form of the Naiver-Stokes equations that are used in this paper.
@@ -29,7 +44,7 @@
     <img width="320" src="/static/img/StableFluids1.png"></img>
 
     <p>
-      Above shows the 4 steps within a single update to the vector field. "Add force" is the generic F term in the Navier Stokes equation, which
+      Above shows the 4 steps within a single update to the vector field. "Add force" is the f term in the Navier Stokes equation, which
       represents external forces. This can be used to create artificial boundaries, sources, and sinks, as well as gravity.
     </p>
     <p>
@@ -55,7 +70,7 @@
     <p>
       The general solution for the projection step is solving a Poisson problem, requiring a Poisson solver. In essence, the 
       Poisson equation comes down to solving a large, sparse, linear system. The original paper uses a multigrid method for the
-      solution, which is linear time, just like the advection step above.
+      solution, which is linear time, just like the advection step above. 
     </p>
 
     <p>
@@ -70,10 +85,17 @@
     <img width="320" src="/static/img/StableFluids6.png"></img>
 
     <p>
-      Above shows the entire algorithm. We didn't explain the diffusion step, as we assume the fluid is inviscous, so v=0.
+      Above on the left shows the operator that takes only the divergence free component of the vector field w.
+      k is the wavenumber, and by multiplying k by w(k), the result is orthogonal, which gives a divergence free result.
+      For more information, I suggest a conference talk <a href="https://www.youtube.com/watch?v=766obijdpuU">here</a>.
+      
+    </p>
+    <p>
+      Above on the right shows the entire algorithm. We didn't explain the diffusion step, as we assume the fluid is inviscous, so v=0.
       These steps are very efficient and do not require timestep refinement, and are unconditionally stable.
     </p>
 
+    <h2>Results</h2>
     <p>
       To visualize results, we use the same advection calculation we use for the velocity field advection step. We can
       inject dye into the fluid at arbitrary points with arbitrary color, and keep track of them as they're advected in 
@@ -96,10 +118,15 @@
     </video>
 
     <p>
-      All experiments are done using Python and Numpy. The boundaries are not periodic in my examples, so 
-      a laplacian is solved using SciPy. Grid sizes are 512^2 for video 1 and 2, and 256^2 for video 3. 
+      All experiments are done using Python with NumPy and SciPy. The boundaries are not periodic in my examples, so 
+      a laplacian is solved using SciPy instead of the Fourier domain solution. Grid sizes are 512^2 for video 1 and 2, and 256^2 for video 3. 
       Video 1 has 500 timesteps, and video 2 and 3 have 1500. Time per frame is between 10ms and 400 ms, which
       can be realtime if lower framerates are allowed.
+    </p>
+
+    <p>
+      In videos 1 and 2, I add boundaries such that fluid cannot escape the domain. However in the third video, dye is permitted to
+       leave the domain since results were odd when constrained.
     </p>
 
     <p>
@@ -118,10 +145,15 @@
       a white circle where my "mixing" stick is. I have coded it to mix clockwise by adding external forces at the positions
       folowing the movement of the mixing stick.
       </p>
+    <p>
+      Overall quality is good, but the slow spread of ink is apparent, especially in the beginning of video 2, where
+      the ink for the image quickly blurs.
+    </p>
 
     <p>
       In the future, I may implement this in Javascript on my website so a realtime tool could be used, kind of like 
-      https://paveldogreat.github.io/WebGL-Fluid-Simulation/. That implemenation uses WebGL, which would be more performant than
+      <a href="https://paveldogreat.github.io/WebGL-Fluid-Simulation/">this tool</a>. 
+      That implemenation uses WebGL, which would be more performant than
       javascript, however.
     </p>
   </div>

@@ -1,0 +1,128 @@
+
+<!-- Page Content -->
+<section class="py-5">
+  <div class="container">
+  
+    <h1 class="font-weight-light">SciVis Class Final Project</h1>
+    <p class="lead">Stable Fluids</p>
+
+    <p>For my final project in Scientific Visualization, a class taught by my advisor Han-Wei Shen in Spring 2022, I experiment with an implementation 
+      of the paper <a href="https://d2f99xq7vri1nk.cloudfront.net/legacy_app_files/pdf/ns.pdf">Stable Fluids</a> by Jos Stam.
+    My code is available at https://github.com/skywolf829/SciVisFinalProject.
+    </p> 
+
+    <p>The implementation is not as rigorous as other solutions to the Navier Stokes equations, but gives a good enough visualization, especially for cinematic reasons
+      within games and movies. The solutions using this paper's implementation are more "diffused" than other Eulerian solutions. As a benefit, the simulation speed
+      is extremely fast, and it is guaranteed to not "blow up" as other solutions will under certain conditions.
+    </p>
+
+    <img width="320" src="/static/img/StableFluids2.png"></img>
+    
+
+    <p>
+      Above is the form of the Naiver-Stokes equations that are used in this paper.
+      Stable Fluids uses a semi-Lagrangian and implicit approach, broken into four steps. For this project, only three of the steps are used, with the 
+      "diffusion" step being skipped. Diffusion is skipped because viscosity tends to dampen the fluid simulation, and inviscous fluids look cooler. Therefore,
+      in our simulations, we have 0 viscosity, and can remove this diffusion term altogether.
+    </p>
+    
+    <img width="320" src="/static/img/StableFluids1.png"></img>
+
+    <p>
+      Above shows the 4 steps within a single update to the vector field. "Add force" is the generic F term in the Navier Stokes equation, which
+      represents external forces. This can be used to create artificial boundaries, sources, and sinks, as well as gravity.
+    </p>
+    <p>
+      The next step is the advection, which is extremely intuitive in this paper. All that is needed is a particle tracer, which in this class, we did for 
+      Lab 3! In the advection step, the velocity values themselves are advected to the next step using the current velocity field. 
+      However, if a particle is dropped at each grid point and advected forward, the interpolation becomes challenging because final velocity values 
+      may land off of grid points, shown below.
+    </p>
+    <img width="320" src="/static/img/StableFluids3.png"></img>
+
+    <p>
+      Instead, the author advects the velocity field backward by the same amount of time, and then uses linear interpolation to get the final
+      velocity value for the grid point advection started at. The process is shown below. 
+    </p>
+
+    <img width="320" src="/static/img/StableFluids4.png"></img>
+
+    <p>
+      Since we are skipping over diffusion, the last step is to project. In the previous steps, we may have broken our incompressible 
+      rule. This step is responsible for fixing those problems. The author uses two solutions given two boundary conditions:
+      a general solution and an elegant solution for periodic boundaries.
+    </p>
+    <p>
+      The general solution for the projection step is solving a Poisson problem, requiring a Poisson solver. In essence, the 
+      Poisson equation comes down to solving a large, sparse, linear system. The original paper uses a multigrid method for the
+      solution, which is linear time, just like the advection step above.
+    </p>
+
+    <p>
+      However, when the boundaries are periodic, the solution is more elegant. The periodicity allows the velocity field
+      to be transformed into the Fourier domain. In the Fourier domain, the vector field can easily be decomposed into its
+      divergence free and irrotational components. The author creates an operator P which is responsible for taking only
+      the divergence free component of the vector field in the Fourier domain. After taking that component, it can be
+      inverse transformed to the original velocity space, and the update is complete.
+    </p>
+
+    <img width="320" src="/static/img/StableFluids5.png"></img>
+    <img width="320" src="/static/img/StableFluids6.png"></img>
+
+    <p>
+      Above shows the entire algorithm. We didn't explain the diffusion step, as we assume the fluid is inviscous, so v=0.
+      These steps are very efficient and do not require timestep refinement, and are unconditionally stable.
+    </p>
+
+    <p>
+      To visualize results, we use the same advection calculation we use for the velocity field advection step. We can
+      inject dye into the fluid at arbitrary points with arbitrary color, and keep track of them as they're advected in 
+      the fluid over time. Below are some visualizations made.
+    </p>
+
+    <video width="320" controls>
+      <source src="/static/vid/StableFluids1.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+    </video>
+
+    <video width="320"  controls>
+      <source src="/static/vid/StableFluids2.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+    </video>
+
+    <video width="320" controls>
+      <source src="/static/vid/StableFluids3.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+    </video>
+
+    <p>
+      All experiments are done using Python and Numpy. The boundaries are not periodic in my examples, so 
+      a laplacian is solved using SciPy. Grid sizes are 512^2 for video 1 and 2, and 256^2 for video 3. 
+      Video 1 has 500 timesteps, and video 2 and 3 have 1500. Time per frame is between 10ms and 400 ms, which
+      can be realtime if lower framerates are allowed.
+    </p>
+
+    <p>
+      In the first video, the external forces are used to stop ink from entering the letters "SCIVIS" inside the domain.
+      The ink is colored based on vorticity, and is injected constantly from the source spots, where the vector field 
+      is set to point inward.
+    </p>
+    <p>
+    In the second video, the ink is initialized as a previous photo taken from a scivis group dinner in December 2021.
+    The ink is mixed throughout the domain from three sources at the bottom of the image. Toward the end, it just looks 
+    like coffee being mixed!
+    </p>
+
+    <p>
+      The last video shows when two colors are mixed together. To make the visualization, I "overwrite" the output image with
+      a white circle where my "mixing" stick is. I have coded it to mix clockwise by adding external forces at the positions
+      folowing the movement of the mixing stick.
+      </p>
+
+    <p>
+      In the future, I may implement this in Javascript on my website so a realtime tool could be used, kind of like 
+      https://paveldogreat.github.io/WebGL-Fluid-Simulation/. That implemenation uses WebGL, which would be more performant than
+      javascript, however.
+    </p>
+  </div>
+</section>

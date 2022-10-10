@@ -3,3 +3,4 @@ python_scripts/__pycache__/*
 /log.txt
 *.pyc
 /menv/*
+log.txt

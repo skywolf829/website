@@ -1,0 +1,10 @@
+@ARTICLE{wurster22_hierarchicalsr,
+  author={Wurster, Skylar W. and Guo, Hanqi and Shen, Han-Wei and Peterka, Tom and Xu, Jiayi},
+  journal={IEEE Transactions on Visualization and Computer Graphics}, 
+  title={Deep Hierarchical Super Resolution for Scientific Data}, 
+  year={2022},
+  volume={},
+  number={},
+  pages={1-14},
+  doi={10.1109/TVCG.2022.3214420}
+}

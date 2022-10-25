@@ -1,0 +1,17 @@
+@inproceedings{kim19_mazegeneration,
+    author = {Kim, Paul Hyunjin and Grove, Jacob and Wurster, Skylar and Crawfis, Roger},
+    title = {Design-Centric Maze Generation},
+    year = {2019},
+    isbn = {9781450372176},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    url = {https://doi.org/10.1145/3337722.3341854},
+    doi = {10.1145/3337722.3341854},
+    abstract = {A maze is a common structure in a game level. When we design game levels having a different purpose of each level, we may desire mazes with different topological properties, such as lots of branches or long straight-ways. Thus, we need the ability to design mazes based on our game mechanics. In this paper, we introduce our design-centric maze generation in which designers can input their desired properties to create their own mazes. Our method also enables the designers to control the topology of the solution path of a maze. Additionally, this method can provide several mazes which satisfy the given desired properties allowing designers to choose the best maze and use it to build game content for a game level. To demonstrate how useful our design-centric method is, this paper provides several use-cases of building actual game levels and shows that we can design the levels effectively using our method.},
+    booktitle = {Proceedings of the 14th International Conference on the Foundations of Digital Games},
+    articleno = {83},
+    numpages = {9},
+    keywords = {perfect maze, search-based procedural content generation, maze generation, topological properties of maze},
+    location = {San Luis Obispo, California, USA},
+    series = {FDG '19}
+}

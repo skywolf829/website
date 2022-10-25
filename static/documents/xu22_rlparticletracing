@@ -1,0 +1,10 @@
+@ARTICLE{xu22_rlparticletracing,  
+    author={Xu, Jiayi and Guo, Hanqi and Shen, Han-Wei and Raj, Mukund and Wurster, Skylar Wolfgang and Peterka, Tom},  
+    journal={IEEE Transactions on Visualization and Computer Graphics},   
+    title={Reinforcement Learning for Load-balanced Parallel Particle Tracing},   
+    year={2022},  
+    volume={},  
+    number={},  
+    pages={1-1},    
+    doi={10.1109/TVCG.2022.3148745}
+}

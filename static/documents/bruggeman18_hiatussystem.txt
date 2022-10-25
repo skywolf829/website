@@ -1,0 +1,18 @@
+@inproceedings{
+    hiatus18_bruggeman,
+    author = {Bruggeman, Kevin J. and Wurster, Skylar W.},
+    title = {The Hiatus System: Virtual Healing Spaces: Low Dose Mindfulness Based Stress Reduction Virtual Reality Application},
+    year = {2018},
+    isbn = {9781450358071},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    url = {https://doi.org/10.1145/3213779.3213785},
+    doi = {10.1145/3213779.3213785},
+    abstract = {This document explains the design, concept, and purpose behind The Hiatus System. This project aims to identify the possibility of using virtual reality to enhance the effectiveness of mindfulness based stress reduction (MBSR) practice on individuals with low cognitive memory. The Hiatus System was developed from the ongoing research at The Ohio State University on Virtual Healing Spaces. Healing Spaces, a phrase coined by Dr. Esther Sternberg, is a space that promotes a stress reductive state. This virtual experience is designed to attain and maintain user attentions towards the meditative practice. The hypothesis is that the virtual environment, combined with real time biofeedback of the breath, will create a system that can effectively teach the user how to meditate and reduce stress.},
+    booktitle = {ACM SIGGRAPH 2018 Appy Hour},
+    articleno = {8},
+    numpages = {2},
+    keywords = {mindfulness based stress reduction (MBSR), virtual healing spaces, mindfulness, flow, healing spaces, stress, virtual reality},
+    location = {Vancouver, British Columbia, Canada},
+    series = {SIGGRAPH '18}
+}

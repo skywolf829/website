@@ -1,0 +1,57 @@
+
+
+<!-- Page Content -->
+<section class="py-5">
+  <div class="container">
+    <h1 class="font-weight-light">Adaptively Placed Multi-Grid Scene Representation Network</h1>
+    <p class="lead">Flexible feature grids for 3D scene representation</p>
+    <p> <a href="https://arxiv.org/abs/2308.02494">Paper</a> <a href="https://github.com/skywolf829/APMGSRN">Code</a></p>
+
+    <video autoplay="false" controls>
+      <source src="/static/vid/GridsTraining.mp4" type="video/mp4">
+    </video>
+
+      <p>Scene representation networks (SRNs) like NeRF and I-NGP model a scene by learning a 
+      function that maps spatial coordinates to a color/density value at that spatial location.
+      To create an image for a certain viewpoint, a rendering algorithm like ray-marching is used,
+      which sends rays out from the camera through each pixel in the image plane. The rays are sampled
+      from the starting point going outward, and the spatial positions are decoded by the neural network
+      to a color/alpha value, which can subsequently be composited to form a final color.</p>
+      <br>
+      <p>
+        The challenge with these SRNs is the speed at which they train and render. The original
+        NeRF model achieves high quality, it takes considerable time to train and render. A single frame
+        can take on the order of minutes to render depending on resolution and model size.
+        I-NGP improves on both the training time and rendering speed by using a feature grid,
+        which takes computation out of the fully connected layers of NeRF and instead allocates those
+        parameters into a feature grid of learnable parameters that can be efficiently queried with 
+        trilinear interpolation. They do some other fancy tricks such as hash-grid encoding and 
+        multiple levels of resolution, but the efficiency comes from a fixed feature grid and
+        a shallow decoder neural network.
+      </p>
+      <br>
+      <p>
+        While this is great for training/rendering speed, I-NGP and other grid-based models thus far are not adaptive
+        to the features within the scene. The grid remains fixed at the extents of the spatial domain.
+        This may be wasteful, since the complexities within the scene may not be uniformly distributed
+        within the scene.
+      </p>
+      <img id='arch' src="/static/img/APMGSRN_architecture.jpg" width=500 height=500>  
+      <p>
+        In this project, we add a simple mechanic to "unlock" the feature grid and allow the grid position to
+        be learned. This lets the model efficiently use all parameters, keeping the memory/storage use low and 
+        rendering speed high.
+      </p>
+      <p>
+        To introduce this flexibility, we give each grid a transformation matrix with learnable parameters.
+        This gives the grids the flexibility to rotate, scale, translate, and even shear to fit the 
+        scene better. Another change is that we use a set of multiple feature grids instead of a single grid. 
+        This helps cover content in the scene better than a single grid, and creates a natural kind of 
+        multiresolution within the model.
+      </p>
+      <p>
+        For more details, please read our paper!
+      </p>
+      <img id='arch' src="/static/img/APMGSRN-Model_qualitative.jpg" width=500 height=500>  
+    </div>
+</section>
